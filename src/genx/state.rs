@@ -214,7 +214,7 @@ define_enum_with_from_str! {
 
 define_enum_with_from_str! {
     #[repr(u8)]
-    #[derive(Debug, PartialEq, Copy, Clone)]
+    #[derive(Debug, PartialEq, Copy, Clone, Eq, Hash, PartialOrd, Ord)]
     Weather {
         NONE,
         SUN,
@@ -229,7 +229,7 @@ define_enum_with_from_str! {
 
 define_enum_with_from_str! {
     #[repr(u8)]
-    #[derive(Debug, PartialEq, Copy, Clone)]
+    #[derive(Debug, PartialEq, Copy, Clone, Eq, Hash, PartialOrd, Ord)]
     Terrain {
         NONE,
         ELECTRICTERRAIN,

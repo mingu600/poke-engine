@@ -6,13 +6,13 @@ use crate::state::{Pokemon, PokemonStatus, Side, State};
 
 const POKEMON_ALIVE: f32 = 30.0;
 const POKEMON_HP: f32 = 100.0;
-const USED_TERA: f32 = -75.0;
+pub const USED_TERA: f32 = -75.0;
 
-const POKEMON_ATTACK_BOOST: f32 = 30.0;
-const POKEMON_DEFENSE_BOOST: f32 = 15.0;
-const POKEMON_SPECIAL_ATTACK_BOOST: f32 = 30.0;
-const POKEMON_SPECIAL_DEFENSE_BOOST: f32 = 15.0;
-const POKEMON_SPEED_BOOST: f32 = 30.0;
+pub const POKEMON_ATTACK_BOOST: f32 = 30.0;
+pub const POKEMON_DEFENSE_BOOST: f32 = 15.0;
+pub const POKEMON_SPECIAL_ATTACK_BOOST: f32 = 30.0;
+pub const POKEMON_SPECIAL_DEFENSE_BOOST: f32 = 15.0;
+pub const POKEMON_SPEED_BOOST: f32 = 30.0;
 
 const POKEMON_BOOST_MULTIPLIER_6: f32 = 3.3;
 const POKEMON_BOOST_MULTIPLIER_5: f32 = 3.15;
@@ -35,9 +35,9 @@ const POKEMON_TOXIC: f32 = -30.0;
 const POKEMON_POISONED: f32 = -10.0;
 const POKEMON_BURNED: f32 = -25.0;
 
-const LEECH_SEED: f32 = -30.0;
-const SUBSTITUTE: f32 = 40.0;
-const CONFUSION: f32 = -20.0;
+pub const LEECH_SEED: f32 = -30.0;
+pub const SUBSTITUTE: f32 = 40.0;
+pub const CONFUSION: f32 = -20.0;
 
 const REFLECT: f32 = 20.0;
 const LIGHT_SCREEN: f32 = 20.0;
@@ -89,7 +89,7 @@ fn evaluate_burned(pokemon: &Pokemon) -> f32 {
     multiplier * POKEMON_BURNED
 }
 
-fn get_boost_multiplier(boost: i8) -> f32 {
+pub fn get_boost_multiplier(boost: i8) -> f32 {
     match boost {
         6 => POKEMON_BOOST_MULTIPLIER_6,
         5 => POKEMON_BOOST_MULTIPLIER_5,
@@ -127,7 +127,7 @@ fn evaluate_hazards(pokemon: &Pokemon, side: &Side) -> f32 {
     score
 }
 
-fn evaluate_pokemon(pokemon: &Pokemon) -> f32 {
+pub fn evaluate_pokemon(pokemon: &Pokemon) -> f32 {
     let mut score = 0.0;
     score += POKEMON_HP * pokemon.hp as f32 / pokemon.maxhp as f32;
 

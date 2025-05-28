@@ -14,10 +14,16 @@ pub mod engine;
 #[cfg(not(any(feature = "gen1", feature = "gen2", feature = "gen3")))]
 #[path = "genx/mod.rs"]
 pub mod engine;
+pub mod selfplay;
 
 pub mod choices;
 pub mod instruction;
 pub mod io;
+pub mod matchup_calc;
+pub mod matchup_calc_mcts;
+pub mod matchup_debug_utils;
+pub mod matchup_mcts;
+pub mod matchup_visualization_tool;
 pub mod mcts;
 pub mod pokemon;
 pub mod search;

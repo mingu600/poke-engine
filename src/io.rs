@@ -5,12 +5,19 @@ use crate::engine::generate_instructions::{
 };
 use crate::engine::state::MoveChoice;
 use crate::instruction::{Instruction, StateInstructions};
+use crate::matchup_calc_mcts::perform_mcts_for_matchup;
+use crate::matchup_mcts::initialize_team_matchup_cache;
+use crate::matchup_mcts::{analyze_matchup_cache, perform_mcts_with_team_matchups};
+use crate::matchup_visualization_tool::MatchupVisualizer;
 use crate::mcts::{perform_mcts, MctsResult};
 use crate::search::{expectiminimax_search, iterative_deepen_expectiminimax, pick_safest};
-use crate::state::State;
+use crate::selfplay::initialization::initialize_battle_state;
+use crate::state::{PokemonIndex, State};
 use clap::Parser;
+use std::fs;
 use std::io;
 use std::io::Write;
+use std::path::PathBuf;
 use std::process::exit;
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
@@ -35,8 +42,20 @@ enum SubCommand {
     Expectiminimax(Expectiminimax),
     IterativeDeepening(IterativeDeepening),
     MonteCarloTreeSearch(MonteCarloTreeSearch),
+    MonteCarloTreeSearchMU(MonteCarloTreeSearchMU),
     CalculateDamage(CalculateDamage),
     GenerateInstructions(GenerateInstructions),
+    AnalyzeMatchups(AnalyzeMatchups),
+    MU(MU),
+}
+
+#[derive(Parser)]
+pub struct AnalyzeMatchups {}
+
+#[derive(Parser)]
+struct MU {
+    #[clap(short, long, default_value_t = 100)]
+    iterations: u32,
 }
 
 #[derive(Parser)]
@@ -65,6 +84,14 @@ struct MonteCarloTreeSearch {
     #[clap(short, long, required = true)]
     state: String,
 
+    #[clap(short, long, default_value_t = 5000)]
+    time_to_search_ms: u64,
+}
+
+#[derive(Parser)]
+struct MonteCarloTreeSearchMU {
+    #[clap(short, long, required = false)]
+    state: String,
     #[clap(short, long, default_value_t = 5000)]
     time_to_search_ms: u64,
 }
@@ -172,7 +199,9 @@ fn print_mcts_result(state: &State, result: MctsResult) {
 }
 
 fn pprint_mcts_result(state: &State, result: MctsResult) {
+    println!("{}", state.pprint());
     println!("\nTotal Iterations: {}\n", result.iteration_count);
+    println!("Maximum Depth: {}", result.max_depth);
     println!("Side One:");
     println!(
         "\t{:<25}{:>12}{:>12}{:>10}{:>10}",
@@ -246,6 +275,57 @@ fn print_subcommand_result(
     println!("evaluation: {}", safest.1);
 }
 
+/// Load state from file or create it from data files
+fn load_or_create_state() -> State {
+    // Otherwise, create a new state from data files
+    let data_dir = PathBuf::from("data");
+    // Try to load from a saved state file if it exists
+    if let Ok(state_str) = fs::read_to_string(data_dir.join("saved_state.txt")) {
+        return State::deserialize(&state_str);
+    }
+
+    let random_teams = match fs::read_to_string(data_dir.join("random_teams.json")) {
+        Ok(content) => content,
+        Err(err) => {
+            eprintln!("Failed to read teams file: {}", err);
+            panic!("Cannot continue without teams data");
+        }
+    };
+
+    let pokedex = match fs::read_to_string(data_dir.join("pokedex.json")) {
+        Ok(content) => content,
+        Err(err) => {
+            eprintln!("Failed to read pokedex file: {}", err);
+            panic!("Cannot continue without pokedex data");
+        }
+    };
+
+    let movedex = match fs::read_to_string(data_dir.join("moves.json")) {
+        Ok(content) => content,
+        Err(err) => {
+            eprintln!("Failed to read moves file: {}", err);
+            panic!("Cannot continue without moves data");
+        }
+    };
+
+    // Create battle state from the loaded data
+    let mut state = create_battle_state(&random_teams, &pokedex, &movedex);
+
+    // Save the state for future use
+    let serialized = state.serialize();
+    let _ = fs::write(data_dir.join("saved_state.txt"), &serialized);
+    state = State::deserialize(&serialized);
+    state
+}
+
+/// Create a battle state from JSON data
+fn create_battle_state(random_teams: &str, pokedex: &str, movedex: &str) -> State {
+    // This function would parse the JSON data and initialize a State
+    // For simplicity, this example uses initialize_battle_state from the selfplay module
+    use crate::selfplay::initialization::initialize_battle_state;
+    initialize_battle_state(random_teams, pokedex, movedex)
+}
+
 pub fn main() {
     let args = Cli::parse();
     let mut io_data = IOData::default();
@@ -298,7 +378,157 @@ pub fn main() {
                     side_two_options.clone(),
                     std::time::Duration::from_millis(mcts.time_to_search_ms),
                 );
-                print_mcts_result(&state, result);
+                pprint_mcts_result(&state, result);
+            }
+
+            SubCommand::MU(mu) => {
+                let state = load_or_create_state();
+
+                let mut sim_state = State::default();
+
+                // Copy the selected Pokémon
+                sim_state.side_one.pokemon[PokemonIndex::P0] =
+                    state.side_one.pokemon[PokemonIndex::P0].clone();
+                sim_state.side_two.pokemon[PokemonIndex::P0] =
+                    state.side_two.pokemon[PokemonIndex::P0].clone();
+
+                // Set them as active
+                sim_state.side_one.active_index = PokemonIndex::P0;
+                sim_state.side_two.active_index = PokemonIndex::P0;
+
+                sim_state.use_last_used_move = true;
+
+                if !state.side_one.can_use_tera() {
+                    sim_state.side_one.pokemon[PokemonIndex::P5].terastallized = true;
+                }
+                if !state.side_two.can_use_tera() {
+                    sim_state.side_two.pokemon[PokemonIndex::P5].terastallized = true;
+                }
+
+                // // Apply the battle conditions
+                // apply_conditions(&mut sim_state, conditions);
+
+                let (s1_options, s2_options) = sim_state.get_all_options();
+
+                // Run MCTS simulation
+                let result =
+                    perform_mcts_for_matchup(&mut sim_state, s1_options, s2_options, mu.iterations);
+                pprint_mcts_result(&sim_state, result);
+            }
+
+            SubCommand::AnalyzeMatchups(_) => {
+                // Load state from file or create it
+                let mut state = load_or_create_state();
+
+                println!("Analyzing matchups between teams...");
+
+                // Initialize cache and visualizer
+                let cache = initialize_team_matchup_cache(&mut state);
+                let mut visualizer = MatchupVisualizer::new(cache);
+
+                // Analyze all matchups with detailed reasoning
+                visualizer.analyze_all_matchups(&state);
+
+                // Print the matchup matrix
+                visualizer.print_matchup_matrix(&state);
+
+                // Generate HTML visualization with move sets
+                match visualizer.generate_html_visualization(&state) {
+                    Ok(_) => println!(
+                        "HTML visualization with move sets has been generated in the 'matchup_analysis' directory"
+                    ),
+                    Err(e) => println!("Failed to generate HTML visualization: {}", e),
+                };
+
+                // Example of getting detailed analysis for specific matchup
+                let s1_idx = PokemonIndex::P0; // First Pokémon on side one
+                let s2_idx = PokemonIndex::P0; // Third Pokémon on side two
+
+                println!("\nDetailed analysis for specific matchup:");
+                visualizer.print_detailed_matchup(&state, s1_idx, s2_idx);
+
+                println!(
+                    "\nCommand: 'matchup-detail <s1_idx> <s2_idx>' for specific matchup details"
+                );
+                println!("Example: 'matchup-detail 0 2' to see details of first Pokémon vs third opponent Pokémon");
+            }
+
+            SubCommand::MonteCarloTreeSearchMU(mcts_evo) => {
+                // if state is provided, use it
+                let mut state = if mcts_evo.state != "" {
+                    State::deserialize(mcts_evo.state.as_str())
+                } else {
+                    // if not, read from data files
+                    let data_dir = PathBuf::from("data");
+                    let random_teams = match fs::read_to_string(data_dir.join("random_teams.json"))
+                    {
+                        Ok(content) => content,
+                        Err(err) => {
+                            eprintln!("Failed to read file: {}", err);
+                            return;
+                        }
+                    };
+                    let pokedex = match fs::read_to_string(data_dir.join("pokedex.json")) {
+                        Ok(content) => content,
+                        Err(err) => {
+                            eprintln!("Failed to read file: {}", err);
+                            return;
+                        }
+                    };
+                    let movedex = match fs::read_to_string(data_dir.join("moves.json")) {
+                        Ok(content) => content,
+                        Err(err) => {
+                            eprintln!("Failed to read file: {}", err);
+                            return;
+                        }
+                    };
+                    initialize_battle_state(&random_teams, &pokedex, &movedex)
+                };
+                println!("{}", state.serialize());
+                let mut matchup_cache = initialize_team_matchup_cache(&mut state);
+
+                analyze_matchup_cache(&state, &mut matchup_cache);
+
+                (side_one_options, side_two_options) = state.root_get_all_options();
+
+                let result = perform_mcts_with_team_matchups(
+                    &mut state,
+                    side_one_options.clone(),
+                    side_two_options.clone(),
+                    std::time::Duration::from_millis(mcts_evo.time_to_search_ms),
+                    &mut matchup_cache,
+                );
+                pprint_mcts_result(&state, result);
+                // Print cache statistics
+                let (hits, misses, total, hit_rate) = matchup_cache.get_stats();
+                println!("\nCache Statistics:");
+                println!("  Total queries: {}", total);
+                println!("  Cache hits: {} ({:.2}%)", hits, hit_rate);
+                println!("  Cache misses: {} ({:.2}%)", misses, 100.0 - hit_rate);
+                println!("  Cache size: {} entries", matchup_cache.cache_size());
+                let (
+                    complete,
+                    partial,
+                    fallbacks,
+                    total,
+                    complete_rate,
+                    partial_rate,
+                    fallback_rate,
+                ) = matchup_cache.get_evaluation_stats();
+
+                println!("\nEvaluation Statistics:");
+                println!("  Total evaluations: {}", total);
+                println!(
+                    "  Complete evaluations: {} ({:.2}%)",
+                    complete, complete_rate
+                );
+                println!("  Partial evaluations: {} ({:.2}%)", partial, partial_rate);
+                println!("  Fallbacks: {} ({:.2}%)", fallbacks, fallback_rate);
+                println!(
+                    "  Strategic value mean: {}",
+                    matchup_cache.team_strategic_value_mean
+                );
+                println!("  Base value mean: {}", matchup_cache.team_base_value_mean);
             }
             SubCommand::CalculateDamage(calculate_damage) => {
                 state = State::deserialize(calculate_damage.state.as_str());

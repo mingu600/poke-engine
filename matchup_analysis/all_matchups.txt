@@ -1,0 +1,1359 @@
+=== MATCHUP: GIRATINA vs GIRATINA ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 462 (462/462) vs 462 (462/462)
+Best Moves: dragonpulse vs shadowball
+Side 1 Moves: rest, dragonpulse, sleeptalk, calmmind
+Side 2 Moves: dragontail, rest, shadowball, sleeptalk
+Damage: Avg=236/Max=283 vs Avg=225/Max=270
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 462/turn (Sufficient=false, Dominates=false) vs 462/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=true
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=236 (Viable=false) vs S2=225 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Speed tie detected - favoring Side One for analysis
+2. Side One damage output: Avg=236, Max=283 (51.1% of opponent's HP)
+3. Side Two damage output: Avg=225, Max=270 (48.7% of opponent's HP)
+4. Side One has passive recovery: 28 HP per turn
+5. Side Two has passive recovery: 28 HP per turn
+6. Side One effective damage: 208 (direct: 236, passive: 0, opponent recovery: 28)
+7. Side Two effective damage: 197 (direct: 225, passive: 0, opponent recovery: 28)
+8. Side One needs 3 turns to KO (dealing 208 damage per turn)
+9. Side Two needs 3 turns to KO (dealing 197 damage per turn)
+10. Side One has setup moves but setup is not optimal in this matchup
+11. After optimal setup: Side One damage = 236 (0.0% boost), Side Two damage = 225 (0.0% boost)
+12. Matchup category: AFullBRecovery
+13. Final classification: Check
+
+
+
+=== MATCHUP: GIRATINA vs DUGTRIOALOLA ===
+Classification: CHECK (Favorable)
+Primary Reason: Favorable matchup with multiple advantages
+
+-- KEY METRICS --
+HP: 462 (462/462) vs 232 (232/232)
+Best Moves: dragonpulse vs earthquake
+Side 1 Moves: rest, dragonpulse, sleeptalk, calmmind
+Side 2 Moves: ironhead, earthquake, suckerpunch, stealthrock
+Damage: Avg=88/Max=106 vs Avg=180/Max=216
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 4
+Priority: Damage=0 (KO=false) vs Damage=170 (KO=false)
+Recovery: 462/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=88 (Viable=false) vs S2=180 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=88, Max=106 (37.9% of opponent's HP)
+3. Side Two damage output: Avg=180, Max=216 (39.0% of opponent's HP)
+4. Side One has passive recovery: 28 HP per turn
+5. Side One effective damage: 88 (direct: 88, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 152 (direct: 180, passive: 0, opponent recovery: 28)
+7. Side One needs 3 turns to KO (dealing 88 damage per turn)
+8. Side Two needs 4 turns to KO (dealing 152 damage per turn)
+9. Side One has setup moves but setup is not optimal in this matchup
+10. After optimal setup: Side One damage = 88 (0.0% boost), Side Two damage = 180 (0.0% boost)
+11. Matchup category: ASetupARecovery
+12. Final classification: Check
+
+
+
+=== MATCHUP: GIRATINA vs PACHIRISU ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Strong advantage in battle dynamics
+
+-- KEY METRICS --
+HP: 462 (462/462) vs 282 (282/282)
+Best Moves: dragonpulse vs thunderbolt
+Side 1 Moves: rest, dragonpulse, sleeptalk, calmmind
+Side 2 Moves: superfang, thunderbolt, uturn, nuzzle
+Damage: Avg=99/Max=119 vs Avg=36/Max=43
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 58
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 462/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=99 (Viable=false) vs S2=36 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=99, Max=119 (35.1% of opponent's HP)
+3. Side Two damage output: Avg=36, Max=43 (7.8% of opponent's HP)
+4. Side One has passive recovery: 28 HP per turn
+5. Side One effective damage: 99 (direct: 99, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 8 (direct: 36, passive: 0, opponent recovery: 28)
+7. Side One needs 3 turns to KO (dealing 99 damage per turn)
+8. Side Two needs 58 turns to KO (dealing 8 damage per turn)
+9. Side One has setup moves but setup is not optimal in this matchup
+10. After optimal setup: Side One damage = 99 (0.0% boost), Side Two damage = 36 (0.0% boost)
+11. Matchup category: ASetupARecovery
+12. Final classification: Strong Counter
+
+
+
+=== MATCHUP: GIRATINA vs ALOMOMOLA ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Strong advantage in battle dynamics
+
+-- KEY METRICS --
+HP: 462 (462/462) vs 492 (492/492)
+Best Moves: dragonpulse vs liquidation
+Side 1 Moves: rest, dragonpulse, sleeptalk, calmmind
+Side 2 Moves: protect, liquidation, wish, bodyslam
+Damage: Avg=236/Max=283 vs Avg=47/Max=57
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 25
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 462/turn (Sufficient=false, Dominates=false) vs 246/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=236 (Viable=false) vs S2=47 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=236, Max=283 (48.0% of opponent's HP)
+3. Side Two damage output: Avg=47, Max=57 (10.2% of opponent's HP)
+4. Side One has passive recovery: 28 HP per turn
+5. Side Two has passive recovery: 30 HP per turn
+6. Side One effective damage: 206 (direct: 236, passive: 0, opponent recovery: 30)
+7. Side Two effective damage: 19 (direct: 47, passive: 0, opponent recovery: 28)
+8. Side One needs 3 turns to KO (dealing 206 damage per turn)
+9. Side Two needs 25 turns to KO (dealing 19 damage per turn)
+10. Side One has setup moves but setup is not optimal in this matchup
+11. After optimal setup: Side One damage = 236 (0.0% boost), Side Two damage = 47 (0.0% boost)
+12. Matchup category: AFullBRecovery
+13. Final classification: Strong Counter
+
+
+
+=== MATCHUP: GIRATINA vs ENAMORUS ===
+Classification: COUNTERED (Strong Unfavorable)
+Primary Reason: Severely disadvantaged in multiple aspects
+
+-- KEY METRICS --
+HP: 462 (462/462) vs 310 (310/310)
+Best Moves: none vs playrough
+Side 1 Moves: rest, dragonpulse, sleeptalk, calmmind
+Side 2 Moves: taunt, superpower, terablast, playrough
+Damage: Avg=0/Max=0 vs Avg=281/Max=337
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 99 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 462/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=0 (Viable=false) vs S2=281 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One has no effective direct damage output
+3. Side Two damage output: Avg=281, Max=337 (60.8% of opponent's HP)
+4. Side One has passive recovery: 28 HP per turn
+5. Side One effective damage: 0 (direct: 0, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 253 (direct: 281, passive: 0, opponent recovery: 28)
+7. Side One needs 99 turns to KO (dealing 0 damage per turn)
+8. Side Two needs 2 turns to KO (dealing 253 damage per turn)
+9. Side One has setup moves but setup is not optimal in this matchup
+10. After optimal setup: Side One damage = 0 (0.0% boost), Side Two damage = 281 (0.0% boost)
+11. Matchup category: ASetupARecovery
+12. Final classification: Hard Countered
+
+
+
+=== MATCHUP: GIRATINA vs BRUXISH ===
+Classification: CHECK (Favorable)
+Primary Reason: Favorable matchup with multiple advantages
+
+-- KEY METRICS --
+HP: 462 (462/462) vs 298 (298/298)
+Best Moves: dragonpulse vs crunch
+Side 1 Moves: rest, dragonpulse, sleeptalk, calmmind
+Side 2 Moves: icefang, psychicfangs, crunch, wavecrash
+Damage: Avg=177/Max=213 vs Avg=230/Max=276
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 462/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=177 (Viable=false) vs S2=230 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=177, Max=213 (59.4% of opponent's HP)
+3. Side Two damage output: Avg=230, Max=276 (49.8% of opponent's HP)
+4. Side One has passive recovery: 28 HP per turn
+5. Side One effective damage: 177 (direct: 177, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 202 (direct: 230, passive: 0, opponent recovery: 28)
+7. Side One needs 2 turns to KO (dealing 177 damage per turn)
+8. Side Two needs 3 turns to KO (dealing 202 damage per turn)
+9. Side One has setup moves but setup is not optimal in this matchup
+10. After optimal setup: Side One damage = 177 (0.0% boost), Side Two damage = 230 (0.0% boost)
+11. Matchup category: ASetupARecovery
+12. Final classification: Check
+
+
+
+=== MATCHUP: MUDSDALE vs GIRATINA ===
+Classification: COUNTERED (Strong Unfavorable)
+Primary Reason: Severely disadvantaged in multiple aspects
+
+-- KEY METRICS --
+HP: 362 (362/362) vs 462 (462/462)
+Best Moves: earthquake vs shadowball
+Side 1 Moves: stealthrock, heavyslam, earthquake, bodypress
+Side 2 Moves: dragontail, rest, shadowball, sleeptalk
+Damage: Avg=165/Max=198 vs Avg=146/Max=175
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 4 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 462/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=165 (Viable=false) vs S2=146 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=165, Max=198 (35.7% of opponent's HP)
+3. Side Two damage output: Avg=146, Max=175 (40.3% of opponent's HP)
+4. Side One has passive recovery: 22 HP per turn
+5. Side Two has passive recovery: 28 HP per turn
+6. Side One effective damage: 137 (direct: 165, passive: 0, opponent recovery: 28)
+7. Side Two effective damage: 124 (direct: 146, passive: 0, opponent recovery: 22)
+8. Side One needs 4 turns to KO (dealing 137 damage per turn)
+9. Side Two needs 3 turns to KO (dealing 124 damage per turn)
+10. After optimal setup: Side One damage = 165 (0.0% boost), Side Two damage = 146 (0.0% boost)
+11. Matchup category: BRecoveryOnly
+12. Final classification: Hard Countered
+
+
+
+=== MATCHUP: MUDSDALE vs DUGTRIOALOLA ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Strong advantage in battle dynamics
+
+-- KEY METRICS --
+HP: 362 (362/362) vs 232 (232/232)
+Best Moves: earthquake vs earthquake
+Side 1 Moves: stealthrock, heavyslam, earthquake, bodypress
+Side 2 Moves: ironhead, earthquake, suckerpunch, stealthrock
+Damage: Avg=551/Max=661 vs Avg=207/Max=249
+OHKO Chance: 100.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=97 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=551 (Viable=false) vs S2=207 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=551, Max=661 (237.5% of opponent's HP)
+3. Side Two damage output: Avg=207, Max=249 (57.2% of opponent's HP)
+4. Side One has passive recovery: 22 HP per turn
+5. Side One effective damage: 551 (direct: 551, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 185 (direct: 207, passive: 0, opponent recovery: 22)
+7. Side One needs 1 turns to KO (dealing 551 damage per turn)
+8. Side Two needs 2 turns to KO (dealing 185 damage per turn)
+9. After optimal setup: Side One damage = 551 (0.0% boost), Side Two damage = 207 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: PureDamageRace
+12. Final classification: Strong Counter
+
+
+
+=== MATCHUP: MUDSDALE vs PACHIRISU ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Strong advantage in battle dynamics
+
+-- KEY METRICS --
+HP: 362 (362/362) vs 282 (282/282)
+Best Moves: earthquake vs superfang
+Side 1 Moves: stealthrock, heavyslam, earthquake, bodypress
+Side 2 Moves: superfang, thunderbolt, uturn, nuzzle
+Damage: Avg=495/Max=594 vs Avg=181/Max=181
+OHKO Chance: 100.0% vs 0.0%
+Turns to KO: 1 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=495 (Viable=false) vs S2=181 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=495, Max=594 (175.5% of opponent's HP)
+3. Side Two damage output: Avg=181, Max=181 (50.0% of opponent's HP)
+4. Side One has passive recovery: 22 HP per turn
+5. Side One effective damage: 495 (direct: 495, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 159 (direct: 181, passive: 0, opponent recovery: 22)
+7. Side One needs 1 turns to KO (dealing 495 damage per turn)
+8. Side Two needs 3 turns to KO (dealing 159 damage per turn)
+9. After optimal setup: Side One damage = 495 (0.0% boost), Side Two damage = 181 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: PureDamageRace
+12. Final classification: Strong Counter
+
+
+
+=== MATCHUP: MUDSDALE vs ALOMOMOLA ===
+Classification: COUNTERED (Strong Unfavorable)
+Primary Reason: Severely disadvantaged in multiple aspects
+
+-- KEY METRICS --
+HP: 362 (362/362) vs 492 (492/492)
+Best Moves: earthquake vs liquidation
+Side 1 Moves: stealthrock, heavyslam, earthquake, bodypress
+Side 2 Moves: protect, liquidation, wish, bodyslam
+Damage: Avg=225/Max=270 vs Avg=221/Max=265
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 246/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=225 (Viable=false) vs S2=221 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=225, Max=270 (45.7% of opponent's HP)
+3. Side Two damage output: Avg=221, Max=265 (61.0% of opponent's HP)
+4. Side One has passive recovery: 22 HP per turn
+5. Side Two has passive recovery: 30 HP per turn
+6. Side One effective damage: 195 (direct: 225, passive: 0, opponent recovery: 30)
+7. Side Two effective damage: 199 (direct: 221, passive: 0, opponent recovery: 22)
+8. Side One needs 3 turns to KO (dealing 195 damage per turn)
+9. Side Two needs 2 turns to KO (dealing 199 damage per turn)
+10. After optimal setup: Side One damage = 225 (0.0% boost), Side Two damage = 221 (0.0% boost)
+11. Matchup category: BRecoveryOnly
+12. Final classification: Hard Countered
+
+
+
+=== MATCHUP: MUDSDALE vs ENAMORUS ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Strong advantage in battle dynamics
+
+-- KEY METRICS --
+HP: 362 (362/362) vs 310 (310/310)
+Best Moves: heavyslam vs playrough
+Side 1 Moves: stealthrock, heavyslam, earthquake, bodypress
+Side 2 Moves: taunt, superpower, terablast, playrough
+Damage: Avg=397/Max=477 vs Avg=161/Max=193
+OHKO Chance: 100.0% vs 0.0%
+Turns to KO: 1 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=397 (Viable=false) vs S2=161 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=397, Max=477 (128.1% of opponent's HP)
+3. Side Two damage output: Avg=161, Max=193 (44.5% of opponent's HP)
+4. Side One has passive recovery: 22 HP per turn
+5. Side One effective damage: 397 (direct: 397, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 139 (direct: 161, passive: 0, opponent recovery: 22)
+7. Side One needs 1 turns to KO (dealing 397 damage per turn)
+8. Side Two needs 3 turns to KO (dealing 139 damage per turn)
+9. After optimal setup: Side One damage = 397 (0.0% boost), Side Two damage = 161 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: PureDamageRace
+12. Final classification: Strong Counter
+
+
+
+=== MATCHUP: MUDSDALE vs BRUXISH ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 362 (362/362) vs 298 (298/298)
+Best Moves: earthquake vs wavecrash
+Side 1 Moves: stealthrock, heavyslam, earthquake, bodypress
+Side 2 Moves: icefang, psychicfangs, crunch, wavecrash
+Damage: Avg=247/Max=297 vs Avg=397/Max=477
+OHKO Chance: 0.0% vs 50.0%
+Turns to KO: 2 vs 1
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=true)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=247 (Viable=false) vs S2=397 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=247, Max=297 (82.9% of opponent's HP)
+3. Side Two damage output: Avg=397, Max=477 (109.7% of opponent's HP)
+4. Side One has passive recovery: 22 HP per turn
+5. Side One effective damage: 247 (direct: 247, passive: 0, opponent recovery: 0)
+6. Side Two effective damage: 375 (direct: 397, passive: 0, opponent recovery: 22)
+7. Side One needs 2 turns to KO (dealing 247 damage per turn)
+8. Side Two needs 1 turns to KO (dealing 375 damage per turn)
+9. After optimal setup: Side One damage = 247 (0.0% boost), Side Two damage = 397 (0.0% boost)
+10. Side Two can achieve OHKO after setup
+11. Matchup category: PureDamageRace
+12. Final classification: Checked
+
+
+
+=== MATCHUP: ELECTRODE vs GIRATINA ===
+Classification: COUNTERED (Strong Unfavorable)
+Primary Reason: Severely disadvantaged in multiple aspects
+
+-- KEY METRICS --
+HP: 282 (282/282) vs 462 (462/462)
+Best Moves: foulplay vs shadowball
+Side 1 Moves: explosion, foulplay, thunderwave, thunderbolt
+Side 2 Moves: dragontail, rest, shadowball, sleeptalk
+Damage: Avg=227/Max=273 vs Avg=151/Max=182
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 462/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=227 (Viable=false) vs S2=151 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=227, Max=273 (49.1% of opponent's HP)
+3. Side Two damage output: Avg=151, Max=182 (53.5% of opponent's HP)
+4. Side Two has passive recovery: 28 HP per turn
+5. Side One effective damage: 199 (direct: 227, passive: 0, opponent recovery: 28)
+6. Side Two effective damage: 151 (direct: 151, passive: 0, opponent recovery: 0)
+7. Side One needs 3 turns to KO (dealing 199 damage per turn)
+8. Side Two needs 2 turns to KO (dealing 151 damage per turn)
+9. After optimal setup: Side One damage = 227 (0.0% boost), Side Two damage = 151 (0.0% boost)
+10. Matchup category: BRecoveryOnly
+11. Final classification: Hard Countered
+
+
+
+=== MATCHUP: ELECTRODE vs DUGTRIOALOLA ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Disadvantageous matchup with multiple weaknesses
+
+-- KEY METRICS --
+HP: 282 (282/282) vs 232 (232/232)
+Best Moves: foulplay vs earthquake
+Side 1 Moves: explosion, foulplay, thunderwave, thunderbolt
+Side 2 Moves: ironhead, earthquake, suckerpunch, stealthrock
+Damage: Avg=190/Max=228 vs Avg=540/Max=648
+OHKO Chance: 0.0% vs 100.0%
+Turns to KO: 2 vs 1
+Priority: Damage=0 (KO=false) vs Damage=126 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=true)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=190 (Viable=false) vs S2=540 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=190, Max=228 (81.9% of opponent's HP)
+3. Side Two damage output: Avg=540, Max=648 (191.5% of opponent's HP)
+4. Side One effective damage: 190 (direct: 190, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 540 (direct: 540, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 190 damage per turn)
+7. Side Two needs 1 turns to KO (dealing 540 damage per turn)
+8. After optimal setup: Side One damage = 190 (0.0% boost), Side Two damage = 540 (0.0% boost)
+9. Side Two can achieve OHKO after setup
+10. Matchup category: PureDamageRace
+11. Final classification: Checked
+
+
+
+=== MATCHUP: ELECTRODE vs PACHIRISU ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 282 (282/282) vs 282 (282/282)
+Best Moves: explosion vs superfang
+Side 1 Moves: explosion, foulplay, thunderwave, thunderbolt
+Side 2 Moves: superfang, thunderbolt, uturn, nuzzle
+Damage: Avg=273/Max=328 vs Avg=141/Max=141
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 2 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=273 (Viable=false) vs S2=141 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=273, Max=328 (96.8% of opponent's HP)
+3. Side Two damage output: Avg=141, Max=141 (50.0% of opponent's HP)
+4. Side One effective damage: 273 (direct: 273, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 141 (direct: 141, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 273 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 141 damage per turn)
+8. After optimal setup: Side One damage = 273 (0.0% boost), Side Two damage = 141 (0.0% boost)
+9. Matchup category: PureDamageRace
+10. Final classification: Check
+
+
+
+=== MATCHUP: ELECTRODE vs ALOMOMOLA ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 282 (282/282) vs 492 (492/492)
+Best Moves: thunderbolt vs liquidation
+Side 1 Moves: explosion, foulplay, thunderwave, thunderbolt
+Side 2 Moves: protect, liquidation, wish, bodyslam
+Damage: Avg=551/Max=661 vs Avg=144/Max=173
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 246/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=551 (Viable=false) vs S2=144 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=551, Max=661 (112.0% of opponent's HP)
+3. Side Two damage output: Avg=144, Max=173 (51.1% of opponent's HP)
+4. Side Two has passive recovery: 30 HP per turn
+5. Side One effective damage: 521 (direct: 551, passive: 0, opponent recovery: 30)
+6. Side Two effective damage: 144 (direct: 144, passive: 0, opponent recovery: 0)
+7. Side One needs 1 turns to KO (dealing 521 damage per turn)
+8. Side Two needs 2 turns to KO (dealing 144 damage per turn)
+9. After optimal setup: Side One damage = 551 (0.0% boost), Side Two damage = 144 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: BRecoveryOnly
+12. Final classification: Check
+
+
+
+=== MATCHUP: ELECTRODE vs ENAMORUS ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 282 (282/282) vs 310 (310/310)
+Best Moves: thunderbolt vs playrough
+Side 1 Moves: explosion, foulplay, thunderwave, thunderbolt
+Side 2 Moves: taunt, superpower, terablast, playrough
+Damage: Avg=375/Max=450 vs Avg=210/Max=252
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=375 (Viable=false) vs S2=210 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=375, Max=450 (121.0% of opponent's HP)
+3. Side Two damage output: Avg=210, Max=252 (74.5% of opponent's HP)
+4. Side One effective damage: 375 (direct: 375, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 210 (direct: 210, passive: 0, opponent recovery: 0)
+6. Side One needs 1 turns to KO (dealing 375 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 210 damage per turn)
+8. After optimal setup: Side One damage = 375 (0.0% boost), Side Two damage = 210 (0.0% boost)
+9. Side One can achieve OHKO after setup
+10. Matchup category: PureDamageRace
+11. Final classification: Check
+
+
+
+=== MATCHUP: ELECTRODE vs BRUXISH ===
+Classification: CHECK (Favorable)
+Primary Reason: Favorable matchup with multiple advantages
+
+-- KEY METRICS --
+HP: 282 (282/282) vs 298 (298/298)
+Best Moves: thunderbolt vs psychicfangs
+Side 1 Moves: explosion, foulplay, thunderwave, thunderbolt
+Side 2 Moves: icefang, psychicfangs, crunch, wavecrash
+Damage: Avg=412/Max=495 vs Avg=275/Max=330
+OHKO Chance: 100.0% vs 50.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=412 (Viable=false) vs S2=275 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=412, Max=495 (138.3% of opponent's HP)
+3. Side Two damage output: Avg=275, Max=330 (97.5% of opponent's HP)
+4. Side One effective damage: 412 (direct: 412, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 275 (direct: 275, passive: 0, opponent recovery: 0)
+6. Side One needs 1 turns to KO (dealing 412 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 275 damage per turn)
+8. After optimal setup: Side One damage = 412 (0.0% boost), Side Two damage = 275 (0.0% boost)
+9. Side One can achieve OHKO after setup
+10. Matchup category: PureDamageRace
+11. Final classification: Check
+
+
+
+=== MATCHUP: GOLDUCK vs GIRATINA ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 322 (322/322) vs 462 (462/462)
+Best Moves: icebeam vs shadowball
+Side 1 Moves: hydropump, icebeam, grassknot, nastyplot
+Side 2 Moves: dragontail, rest, shadowball, sleeptalk
+Damage: Avg=207/Max=249 vs Avg=151/Max=182
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 462/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=207 (Viable=false) vs S2=151 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=207, Max=249 (44.8% of opponent's HP)
+3. Side Two damage output: Avg=151, Max=182 (46.9% of opponent's HP)
+4. Side Two has passive recovery: 28 HP per turn
+5. Side One effective damage: 179 (direct: 207, passive: 0, opponent recovery: 28)
+6. Side Two effective damage: 151 (direct: 151, passive: 0, opponent recovery: 0)
+7. Side One needs 3 turns to KO (dealing 179 damage per turn)
+8. Side Two needs 3 turns to KO (dealing 151 damage per turn)
+9. Side One has setup moves but setup is not optimal in this matchup
+10. After optimal setup: Side One damage = 207 (0.0% boost), Side Two damage = 151 (0.0% boost)
+11. Matchup category: ASetupBRecovery
+12. Final classification: Checked
+
+
+
+=== MATCHUP: GOLDUCK vs DUGTRIOALOLA ===
+Classification: CHECK (Favorable)
+Primary Reason: Favorable matchup with multiple advantages
+
+-- KEY METRICS --
+HP: 322 (322/322) vs 232 (232/232)
+Best Moves: hydropump vs earthquake
+Side 1 Moves: hydropump, icebeam, grassknot, nastyplot
+Side 2 Moves: ironhead, earthquake, suckerpunch, stealthrock
+Damage: Avg=570/Max=684 vs Avg=249/Max=299
+OHKO Chance: 100.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=117 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=570 (Viable=false) vs S2=249 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=570, Max=684 (245.7% of opponent's HP)
+3. Side Two damage output: Avg=249, Max=299 (77.3% of opponent's HP)
+4. Side One effective damage: 570 (direct: 570, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 249 (direct: 249, passive: 0, opponent recovery: 0)
+6. Side One needs 1 turns to KO (dealing 570 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 249 damage per turn)
+8. Side One has setup moves but setup is not optimal in this matchup
+9. After optimal setup: Side One damage = 570 (0.0% boost), Side Two damage = 249 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: ASetupOnly
+12. Final classification: Check
+
+
+
+=== MATCHUP: GOLDUCK vs PACHIRISU ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 322 (322/322) vs 282 (282/282)
+Best Moves: hydropump vs thunderbolt
+Side 1 Moves: hydropump, icebeam, grassknot, nastyplot
+Side 2 Moves: superfang, thunderbolt, uturn, nuzzle
+Damage: Avg=159/Max=191 vs Avg=198/Max=238
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=159 (Viable=false) vs S2=198 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=159, Max=191 (56.4% of opponent's HP)
+3. Side Two damage output: Avg=198, Max=238 (61.5% of opponent's HP)
+4. Side One effective damage: 159 (direct: 159, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 198 (direct: 198, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 159 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 198 damage per turn)
+8. Side One has setup moves but setup is not optimal in this matchup
+9. After optimal setup: Side One damage = 159 (0.0% boost), Side Two damage = 198 (0.0% boost)
+10. Matchup category: ASetupOnly
+11. Final classification: Checked
+
+
+
+=== MATCHUP: GOLDUCK vs ALOMOMOLA ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 322 (322/322) vs 492 (492/492)
+Best Moves: grassknot vs bodyslam
+Side 1 Moves: hydropump, icebeam, grassknot, nastyplot
+Side 2 Moves: protect, liquidation, wish, bodyslam
+Damage: Avg=280/Max=336 vs Avg=88/Max=106
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 4
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 246/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=280 (Viable=false) vs S2=88 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=280, Max=336 (56.9% of opponent's HP)
+3. Side Two damage output: Avg=88, Max=106 (27.3% of opponent's HP)
+4. Side Two has passive recovery: 30 HP per turn
+5. Side One effective damage: 250 (direct: 280, passive: 0, opponent recovery: 30)
+6. Side Two effective damage: 88 (direct: 88, passive: 0, opponent recovery: 0)
+7. Side One needs 2 turns to KO (dealing 250 damage per turn)
+8. Side Two needs 4 turns to KO (dealing 88 damage per turn)
+9. Side One has setup moves but setup is not optimal in this matchup
+10. After optimal setup: Side One damage = 280 (0.0% boost), Side Two damage = 88 (0.0% boost)
+11. Matchup category: ASetupBRecovery
+12. Final classification: Check
+
+
+
+=== MATCHUP: GOLDUCK vs ENAMORUS ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 322 (322/322) vs 310 (310/310)
+Best Moves: icebeam vs playrough
+Side 1 Moves: hydropump, icebeam, grassknot, nastyplot
+Side 2 Moves: taunt, superpower, terablast, playrough
+Damage: Avg=282/Max=339 vs Avg=192/Max=231
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 2 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=282 (Viable=false) vs S2=192 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=282, Max=339 (91.0% of opponent's HP)
+3. Side Two damage output: Avg=192, Max=231 (59.6% of opponent's HP)
+4. Side One effective damage: 282 (direct: 282, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 192 (direct: 192, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 282 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 192 damage per turn)
+8. Side One has setup moves but setup is not optimal in this matchup
+9. After optimal setup: Side One damage = 282 (0.0% boost), Side Two damage = 192 (0.0% boost)
+10. Matchup category: ASetupOnly
+11. Final classification: Checked
+
+
+
+=== MATCHUP: GOLDUCK vs BRUXISH ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 322 (322/322) vs 298 (298/298)
+Best Moves: hydropump vs psychicfangs
+Side 1 Moves: hydropump, icebeam, grassknot, nastyplot
+Side 2 Moves: icefang, psychicfangs, crunch, wavecrash
+Damage: Avg=142/Max=171 vs Avg=255/Max=306
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=142 (Viable=false) vs S2=255 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=142, Max=171 (47.7% of opponent's HP)
+3. Side Two damage output: Avg=255, Max=306 (79.2% of opponent's HP)
+4. Side One effective damage: 142 (direct: 142, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 255 (direct: 255, passive: 0, opponent recovery: 0)
+6. Side One needs 3 turns to KO (dealing 142 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 255 damage per turn)
+8. Side One has setup moves but setup is not optimal in this matchup
+9. After optimal setup: Side One damage = 142 (0.0% boost), Side Two damage = 255 (0.0% boost)
+10. Matchup category: ASetupOnly
+11. Final classification: Checked
+
+
+
+=== MATCHUP: BOMBIRDIER vs GIRATINA ===
+Classification: COUNTERED (Strong Unfavorable)
+Primary Reason: Severely disadvantaged in multiple aspects
+
+-- KEY METRICS --
+HP: 302 (302/302) vs 462 (462/462)
+Best Moves: knockoff vs dragontail
+Side 1 Moves: honeclaws, bravebird, stoneedge, knockoff
+Side 2 Moves: dragontail, rest, shadowball, sleeptalk
+Damage: Avg=277/Max=333 vs Avg=110/Max=132
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 462/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=277 (Viable=false) vs S2=110 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=277, Max=333 (60.0% of opponent's HP)
+3. Side Two damage output: Avg=110, Max=132 (36.4% of opponent's HP)
+4. Side Two has passive recovery: 28 HP per turn
+5. Side One effective damage: 249 (direct: 277, passive: 0, opponent recovery: 28)
+6. Side Two effective damage: 110 (direct: 110, passive: 0, opponent recovery: 0)
+7. Side One needs 2 turns to KO (dealing 249 damage per turn)
+8. Side Two needs 3 turns to KO (dealing 110 damage per turn)
+9. After optimal setup: Side One damage = 277 (0.0% boost), Side Two damage = 110 (0.0% boost)
+10. Matchup category: BRecoveryOnly
+11. Final classification: Hard Countered
+
+
+
+=== MATCHUP: BOMBIRDIER vs DUGTRIOALOLA ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 302 (302/302) vs 232 (232/232)
+Best Moves: knockoff vs ironhead
+Side 1 Moves: honeclaws, bravebird, stoneedge, knockoff
+Side 2 Moves: ironhead, earthquake, suckerpunch, stealthrock
+Damage: Avg=230/Max=276 vs Avg=187/Max=225
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 2 vs 2
+Priority: Damage=0 (KO=false) vs Damage=55 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=230 (Viable=false) vs S2=187 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=230, Max=276 (99.1% of opponent's HP)
+3. Side Two damage output: Avg=187, Max=225 (61.9% of opponent's HP)
+4. Side One effective damage: 230 (direct: 230, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 187 (direct: 187, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 230 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 187 damage per turn)
+8. After optimal setup: Side One damage = 230 (0.0% boost), Side Two damage = 187 (0.0% boost)
+9. Matchup category: PureDamageRace
+10. Final classification: Checked
+
+
+
+=== MATCHUP: BOMBIRDIER vs PACHIRISU ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 302 (302/302) vs 282 (282/282)
+Best Moves: stoneedge vs thunderbolt
+Side 1 Moves: honeclaws, bravebird, stoneedge, knockoff
+Side 2 Moves: superfang, thunderbolt, uturn, nuzzle
+Damage: Avg=212/Max=255 vs Avg=187/Max=225
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=212 (Viable=false) vs S2=187 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=212, Max=255 (75.2% of opponent's HP)
+3. Side Two damage output: Avg=187, Max=225 (61.9% of opponent's HP)
+4. Side One effective damage: 212 (direct: 212, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 187 (direct: 187, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 212 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 187 damage per turn)
+8. After optimal setup: Side One damage = 212 (0.0% boost), Side Two damage = 187 (0.0% boost)
+9. Matchup category: PureDamageRace
+10. Final classification: Checked
+
+
+
+=== MATCHUP: BOMBIRDIER vs ALOMOMOLA ===
+Classification: COUNTERED (Strong Unfavorable)
+Primary Reason: Severely disadvantaged in multiple aspects
+
+-- KEY METRICS --
+HP: 302 (302/302) vs 492 (492/492)
+Best Moves: bravebird vs liquidation
+Side 1 Moves: honeclaws, bravebird, stoneedge, knockoff
+Side 2 Moves: protect, liquidation, wish, bodyslam
+Damage: Avg=232/Max=279 vs Avg=125/Max=150
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 3 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 246/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=232 (Viable=false) vs S2=125 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=232, Max=279 (47.2% of opponent's HP)
+3. Side Two damage output: Avg=125, Max=150 (41.4% of opponent's HP)
+4. Side Two has passive recovery: 30 HP per turn
+5. Side One effective damage: 202 (direct: 232, passive: 0, opponent recovery: 30)
+6. Side Two effective damage: 125 (direct: 125, passive: 0, opponent recovery: 0)
+7. Side One needs 3 turns to KO (dealing 202 damage per turn)
+8. Side Two needs 3 turns to KO (dealing 125 damage per turn)
+9. After optimal setup: Side One damage = 232 (0.0% boost), Side Two damage = 125 (0.0% boost)
+10. Matchup category: BRecoveryOnly
+11. Final classification: Hard Countered
+
+
+
+=== MATCHUP: BOMBIRDIER vs ENAMORUS ===
+Classification: CHECKED (Unfavorable)
+Primary Reason: Equal KO timing but moves second
+
+-- KEY METRICS --
+HP: 302 (302/302) vs 310 (310/310)
+Best Moves: stoneedge vs playrough
+Side 1 Moves: honeclaws, bravebird, stoneedge, knockoff
+Side 2 Moves: taunt, superpower, terablast, playrough
+Damage: Avg=425/Max=510 vs Avg=363/Max=436
+OHKO Chance: 100.0% vs 50.0%
+Turns to KO: 1 vs 1
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=true)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=425 (Viable=false) vs S2=363 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=425, Max=510 (137.1% of opponent's HP)
+3. Side Two damage output: Avg=363, Max=436 (120.2% of opponent's HP)
+4. Side One effective damage: 425 (direct: 425, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 363 (direct: 363, passive: 0, opponent recovery: 0)
+6. Side One needs 1 turns to KO (dealing 425 damage per turn)
+7. Side Two needs 1 turns to KO (dealing 363 damage per turn)
+8. After optimal setup: Side One damage = 425 (0.0% boost), Side Two damage = 363 (0.0% boost)
+9. Side One can achieve OHKO after setup
+10. Side Two can achieve OHKO after setup
+11. Matchup category: PureDamageRace
+12. Final classification: Checked
+
+
+
+=== MATCHUP: BOMBIRDIER vs BRUXISH ===
+Classification: CHECK (Favorable)
+Primary Reason: Favorable matchup with multiple advantages
+
+-- KEY METRICS --
+HP: 302 (302/302) vs 298 (298/298)
+Best Moves: knockoff vs icefang
+Side 1 Moves: honeclaws, bravebird, stoneedge, knockoff
+Side 2 Moves: icefang, psychicfangs, crunch, wavecrash
+Damage: Avg=416/Max=499 vs Avg=245/Max=294
+OHKO Chance: 100.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 0/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=false (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=416 (Viable=false) vs S2=245 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=416, Max=499 (139.6% of opponent's HP)
+3. Side Two damage output: Avg=245, Max=294 (81.1% of opponent's HP)
+4. Side One effective damage: 416 (direct: 416, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 245 (direct: 245, passive: 0, opponent recovery: 0)
+6. Side One needs 1 turns to KO (dealing 416 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 245 damage per turn)
+8. After optimal setup: Side One damage = 416 (0.0% boost), Side Two damage = 245 (0.0% boost)
+9. Side One can achieve OHKO after setup
+10. Matchup category: PureDamageRace
+11. Final classification: Check
+
+
+
+=== MATCHUP: ARCEUSICE vs GIRATINA ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Can safely set up and then OHKO
+
+-- KEY METRICS --
+HP: 401 (401/401) vs 462 (462/462)
+Best Moves: judgment vs shadowball
+Side 1 Moves: recover, calmmind, judgment, thunderbolt
+Side 2 Moves: dragontail, rest, shadowball, sleeptalk
+Damage: Avg=382/Max=459 vs Avg=112/Max=135
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 4
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 200/turn (Sufficient=false, Dominates=false) vs 462/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=573 (Viable=true) vs S2=112 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=382, Max=459 (82.7% of opponent's HP)
+3. Side Two damage output: Avg=112, Max=135 (27.9% of opponent's HP)
+4. Side Two has passive recovery: 28 HP per turn
+5. Side One effective damage: 354 (direct: 382, passive: 0, opponent recovery: 28)
+6. Side Two effective damage: 112 (direct: 112, passive: 0, opponent recovery: 0)
+7. Side One needs 2 turns to KO (dealing 354 damage per turn)
+8. Side Two needs 4 turns to KO (dealing 112 damage per turn)
+9. Side One can safely set up for 1 turns (optimal strategy)
+10. After optimal setup: Side One damage = 573 (50.0% boost), Side Two damage = 112 (0.0% boost)
+11. Side One can achieve OHKO after setup
+12. Matchup category: AFullBRecovery
+13. Final classification: Strong Counter
+
+
+
+=== MATCHUP: ARCEUSICE vs DUGTRIOALOLA ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 401 (401/401) vs 232 (232/232)
+Best Moves: judgment vs ironhead
+Side 1 Moves: recover, calmmind, judgment, thunderbolt
+Side 2 Moves: ironhead, earthquake, suckerpunch, stealthrock
+Damage: Avg=286/Max=344 vs Avg=288/Max=346
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=85 (KO=false)
+Recovery: 200/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=286 (Viable=false) vs S2=288 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=286, Max=344 (123.3% of opponent's HP)
+3. Side Two damage output: Avg=288, Max=346 (71.8% of opponent's HP)
+4. Side One effective damage: 286 (direct: 286, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 288 (direct: 288, passive: 0, opponent recovery: 0)
+6. Side One needs 1 turns to KO (dealing 286 damage per turn)
+7. Side Two needs 2 turns to KO (dealing 288 damage per turn)
+8. Side One has setup moves but setup is not optimal in this matchup
+9. After optimal setup: Side One damage = 286 (0.0% boost), Side Two damage = 288 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: ASetupARecovery
+12. Final classification: Check
+
+
+
+=== MATCHUP: ARCEUSICE vs PACHIRISU ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 401 (401/401) vs 282 (282/282)
+Best Moves: judgment vs superfang
+Side 1 Moves: recover, calmmind, judgment, thunderbolt
+Side 2 Moves: superfang, thunderbolt, uturn, nuzzle
+Damage: Avg=161/Max=193 vs Avg=200/Max=200
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 200/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=false) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=161 (Viable=false) vs S2=200 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=161, Max=193 (57.1% of opponent's HP)
+3. Side Two damage output: Avg=200, Max=200 (49.9% of opponent's HP)
+4. Side One effective damage: 161 (direct: 161, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 200 (direct: 200, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 161 damage per turn)
+7. Side Two needs 3 turns to KO (dealing 200 damage per turn)
+8. Side One has setup moves but setup is not optimal in this matchup
+9. After optimal setup: Side One damage = 161 (0.0% boost), Side Two damage = 200 (0.0% boost)
+10. Matchup category: ASetupARecovery
+11. Final classification: Check
+
+
+
+=== MATCHUP: ARCEUSICE vs ALOMOMOLA ===
+Classification: COUNTER (Strong Favorable)
+Primary Reason: Can safely set up and then OHKO
+
+-- KEY METRICS --
+HP: 401 (401/401) vs 492 (492/492)
+Best Moves: thunderbolt vs liquidation
+Side 1 Moves: recover, calmmind, judgment, thunderbolt
+Side 2 Moves: protect, liquidation, wish, bodyslam
+Damage: Avg=385/Max=462 vs Avg=95/Max=114
+OHKO Chance: 0.0% vs 0.0%
+Turns to KO: 2 vs 5
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 200/turn (Sufficient=false, Dominates=false) vs 246/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=577 (Viable=true) vs S2=95 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=385, Max=462 (78.3% of opponent's HP)
+3. Side Two damage output: Avg=95, Max=114 (23.7% of opponent's HP)
+4. Side Two has passive recovery: 30 HP per turn
+5. Side One effective damage: 355 (direct: 385, passive: 0, opponent recovery: 30)
+6. Side Two effective damage: 95 (direct: 95, passive: 0, opponent recovery: 0)
+7. Side One needs 2 turns to KO (dealing 355 damage per turn)
+8. Side Two needs 5 turns to KO (dealing 95 damage per turn)
+9. Side One can safely set up for 1 turns (optimal strategy)
+10. After optimal setup: Side One damage = 577 (49.9% boost), Side Two damage = 95 (0.0% boost)
+11. Side One can achieve OHKO after setup
+12. Matchup category: AFullBRecovery
+13. Final classification: Strong Counter
+
+
+
+=== MATCHUP: ARCEUSICE vs ENAMORUS ===
+Classification: CHECK (Favorable)
+Primary Reason: Faster and equal/better KO speed
+
+-- KEY METRICS --
+HP: 401 (401/401) vs 310 (310/310)
+Best Moves: judgment vs superpower
+Side 1 Moves: recover, calmmind, judgment, thunderbolt
+Side 2 Moves: taunt, superpower, terablast, playrough
+Damage: Avg=521/Max=625 vs Avg=247/Max=297
+OHKO Chance: 100.0% vs 0.0%
+Turns to KO: 1 vs 2
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 200/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=true, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=521 (Viable=false) vs S2=247 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+Stat-Lowering Moves: S1=false (Drop=1.00, Post=0, Second=0), S2=true (Drop=0.67, Post=165, Second=140)
+
+-- REASONING STEPS --
+1. Side One moves first due to higher speed
+2. Side One damage output: Avg=521, Max=625 (168.1% of opponent's HP)
+3. Side Two damage output: Avg=247, Max=297 (61.6% of opponent's HP)
+4. Side Two's best move (superpower) lowers stats. After use, damage reduced to 67.0%
+5. Side Two using stat-lowering move first, then reduced damage (247 → 165)
+6. Side One effective damage: 521 (direct: 521, passive: 0, opponent recovery: 0)
+7. Side Two effective damage: 247 (direct: 247, passive: 0, opponent recovery: 0)
+8. Side One needs 1 turns to KO (dealing 521 damage per turn)
+9. Side Two needs 2 turns to KO (dealing 247 damage per turn)
+10. Side One has setup moves but setup is not optimal in this matchup
+11. After optimal setup: Side One damage = 521 (0.0% boost), Side Two damage = 247 (0.0% boost)
+12. Side One can achieve OHKO after setup
+13. Matchup category: ASetupARecovery
+14. Final classification: Check
+
+
+
+=== MATCHUP: ARCEUSICE vs BRUXISH ===
+Classification: CHECK (Favorable)
+Primary Reason: Can set up and OHKO but doesn't control speed
+
+-- KEY METRICS --
+HP: 401 (401/401) vs 298 (298/298)
+Best Moves: thunderbolt vs psychicfangs
+Side 1 Moves: recover, calmmind, judgment, thunderbolt
+Side 2 Moves: icefang, psychicfangs, crunch, wavecrash
+Damage: Avg=287/Max=345 vs Avg=183/Max=220
+OHKO Chance: 50.0% vs 0.0%
+Turns to KO: 2 vs 3
+Priority: Damage=0 (KO=false) vs Damage=0 (KO=false)
+Recovery: 200/turn (Sufficient=false, Dominates=false) vs 0/turn (Sufficient=false, Dominates=false)
+Setup: Has=true (Safe=false, Speed=false, OHKO=true) vs Has=false (Safe=false, Speed=false, OHKO=false)
+Speed: S1 Moves First=false, Speed Tie=false
+
+Advanced Metrics (Mathematical Model):
+Optimal Strategy: S1= (in 0 turns) vs S2= (in 0 turns)
+Setup Boosted Damage: S1=430 (Viable=true) vs S2=183 (Viable=false)
+Recovery Strategy: S1 (Sustainable=false, OptFreq=0.00, TTK=0) vs S2 (Sustainable=false, OptFreq=0.00, TTK=0)
+
+-- REASONING STEPS --
+1. Side Two moves first due to higher speed
+2. Side One damage output: Avg=287, Max=345 (96.3% of opponent's HP)
+3. Side Two damage output: Avg=183, Max=220 (45.6% of opponent's HP)
+4. Side One effective damage: 287 (direct: 287, passive: 0, opponent recovery: 0)
+5. Side Two effective damage: 183 (direct: 183, passive: 0, opponent recovery: 0)
+6. Side One needs 2 turns to KO (dealing 287 damage per turn)
+7. Side Two needs 3 turns to KO (dealing 183 damage per turn)
+8. Side One can safely set up for 1 turns (optimal strategy)
+9. After optimal setup: Side One damage = 430 (49.8% boost), Side Two damage = 183 (0.0% boost)
+10. Side One can achieve OHKO after setup
+11. Matchup category: ASetupARecovery
+12. Final classification: Check
+
+
+

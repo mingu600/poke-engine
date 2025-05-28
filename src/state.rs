@@ -854,7 +854,7 @@ impl Default for Pokemon {
             level: 100,
             types: (PokemonType::NORMAL, PokemonType::TYPELESS),
             base_types: (PokemonType::NORMAL, PokemonType::TYPELESS),
-            hp: 100,
+            hp: 0,
             maxhp: 100,
             ability: Abilities::NONE,
             base_ability: Abilities::NONE,
