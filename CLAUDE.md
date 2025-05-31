@@ -163,10 +163,3 @@ The engine tracks battle progress through:
 - Turn count vs maximum turn limit
 - Instruction generation and application success
 
-#### Performance Characteristics
-- RandomPlayer: ~0.001 seconds per battle
-- DamageMaximizer: ~0.001 seconds per battle  
-- MctsPlayer: Scales with search time (100ms = ~0.1s per battle)
-- Parallel execution provides linear speedup for multiple battles
-- MCTS players show strong performance, often winning 90%+ against simpler strategies
-
