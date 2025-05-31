@@ -1,5 +1,6 @@
 pub mod abilities;
 pub mod base_stats;
+pub mod battle_environment;
 pub mod choice_effects;
 pub mod damage_calc;
 pub mod evaluate;

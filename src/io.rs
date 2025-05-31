@@ -1,4 +1,8 @@
 use crate::choices::{Choice, Choices, MoveCategory, MOVES};
+use crate::engine::battle_environment::{
+    initialize_battle_state, BattleEnvironment, BattleResult, DamageMaximizer, FirstMovePlayer, 
+    MctsPlayer, Player, RandomPlayer,
+};
 use crate::engine::evaluate::evaluate;
 use crate::engine::generate_instructions::{
     calculate_both_damage_rolls, generate_instructions_from_move_pair,
@@ -11,8 +15,7 @@ use crate::matchup_mcts::{analyze_matchup_cache, perform_mcts_with_team_matchups
 use crate::matchup_visualization_tool::MatchupVisualizer;
 use crate::mcts::{perform_mcts, MctsResult};
 use crate::search::{expectiminimax_search, iterative_deepen_expectiminimax, pick_safest};
-use crate::selfplay::initialization::initialize_battle_state;
-use crate::state::{PokemonIndex, State};
+use crate::state::{PokemonIndex, SideReference, State};
 use clap::Parser;
 use std::fs;
 use std::io;
@@ -47,6 +50,7 @@ enum SubCommand {
     GenerateInstructions(GenerateInstructions),
     AnalyzeMatchups(AnalyzeMatchups),
     MU(MU),
+    Battle(Battle),
 }
 
 #[derive(Parser)]
@@ -121,6 +125,49 @@ struct GenerateInstructions {
 
     #[clap(short = 't', long, required = true)]
     side_two_move: String,
+}
+
+#[derive(Parser)]
+struct Battle {
+    #[clap(
+        short = 'p',
+        long,
+        required = true,
+        help = "Player 1 type: random, firstmove, damage, mcts"
+    )]
+    player_one: String,
+    
+    #[clap(
+        short = 'q',
+        long,
+        required = true,
+        help = "Player 2 type: random, firstmove, damage, mcts"
+    )]
+    player_two: String,
+    
+    #[clap(short, long, default_value_t = 100)]
+    max_turns: u16,
+    
+    #[clap(short, long, default_value_t = 1)]
+    runs: usize,
+    
+    #[clap(short, long, default_value_t = false)]
+    verbose: bool,
+    
+    #[clap(short, long)]
+    log_file: Option<String>,
+    
+    #[clap(short = 'j', long, default_value_t = 1)]
+    threads: usize,
+    
+    #[clap(short = 't', long, default_value_t = 100)]
+    mcts_time: u64,
+    
+    #[clap(long)]
+    p1_mcts_time: Option<u64>,
+    
+    #[clap(long)]
+    p2_mcts_time: Option<u64>,
 }
 
 impl Default for IOData {
@@ -321,8 +368,7 @@ fn load_or_create_state() -> State {
 /// Create a battle state from JSON data
 fn create_battle_state(random_teams: &str, pokedex: &str, movedex: &str) -> State {
     // This function would parse the JSON data and initialize a State
-    // For simplicity, this example uses initialize_battle_state from the selfplay module
-    use crate::selfplay::initialization::initialize_battle_state;
+    // For simplicity, this example uses initialize_battle_state from the battle environment module
     initialize_battle_state(random_teams, pokedex, movedex)
 }
 
@@ -585,6 +631,9 @@ pub fn main() {
                     true,
                 );
                 pprint_state_instruction_vector(&instructions);
+            }
+            SubCommand::Battle(battle) => {
+                run_battle_command(battle);
             }
         },
     }
@@ -880,5 +929,134 @@ fn command_loop(mut io_data: IOData) {
                 println!("Unknown command: {}", command);
             }
         }
+    }
+}
+
+fn run_battle_command(battle: Battle) {
+    use std::time::Instant;
+    use rayon::prelude::*;
+    
+    // Set up logging if requested
+    if let Some(log_file) = &battle.log_file {
+        std::env::set_var("BATTLE_LOG_FILE", log_file);
+    }
+    
+    // Create player functions based on types
+    let create_player = |player_type: &str, name: String, search_time: u64| -> Box<dyn Player> {
+        match player_type {
+            "random" => Box::new(RandomPlayer::new(name)),
+            "firstmove" => Box::new(FirstMovePlayer::new(name)),
+            "damage" => Box::new(DamageMaximizer::new(name)),
+            "mcts" => Box::new(MctsPlayer::new(name, search_time)),
+            _ => {
+                eprintln!("Unknown player type: {}. Using random player.", player_type);
+                Box::new(RandomPlayer::new(name))
+            }
+        }
+    };
+    
+    // Determine MCTS search times
+    let p1_time = battle.p1_mcts_time.unwrap_or(battle.mcts_time);
+    let p2_time = battle.p2_mcts_time.unwrap_or(battle.mcts_time);
+    
+    if battle.runs == 1 {
+        // Single battle - run directly
+        let player1 = create_player(&battle.player_one, format!("Player 1 ({})", battle.player_one), p1_time);
+        let player2 = create_player(&battle.player_two, format!("Player 2 ({})", battle.player_two), p2_time);
+        
+        let mut env = BattleEnvironment::new(player1, player2, battle.max_turns as usize, battle.verbose);
+        
+        if let Some(log_file) = &battle.log_file {
+            env = env.with_log_file(log_file.clone());
+        }
+        
+        // Create initial state
+        let data_dir = PathBuf::from("data");
+        let random_teams = fs::read_to_string(data_dir.join("random_teams.json"))
+            .expect("Failed to read teams file");
+        let pokedex = fs::read_to_string(data_dir.join("pokedex.json"))
+            .expect("Failed to read pokedex file");
+        let movedex = fs::read_to_string(data_dir.join("moves.json"))
+            .expect("Failed to read moves file");
+        let initial_state = initialize_battle_state(&random_teams, &pokedex, &movedex);
+        
+        let result = env.run_battle(initial_state);
+        
+        println!("\nBattle complete!");
+        match result.winner {
+            Some(SideReference::SideOne) => println!("Winner: Player 1 ({})", battle.player_one),
+            Some(SideReference::SideTwo) => println!("Winner: Player 2 ({})", battle.player_two),
+            None => println!("Winner: Draw"),
+        }
+        println!("Total turns: {}", result.turn_count);
+        
+        if battle.verbose {
+            println!("\nFinal state:");
+            println!("{}", result.final_state.pprint());
+        }
+    } else {
+        // Multiple battles - run in parallel
+        println!("Running {} battles with {} threads...", battle.runs, battle.threads);
+        let start_time = Instant::now();
+        
+        // Pre-generate states for all battles
+        let states: Vec<State> = (0..battle.runs)
+            .map(|_| {
+                let data_dir = PathBuf::from("data");
+                let random_teams = fs::read_to_string(data_dir.join("random_teams.json"))
+                    .expect("Failed to read teams file");
+                let pokedex = fs::read_to_string(data_dir.join("pokedex.json"))
+                    .expect("Failed to read pokedex file");
+                let movedex = fs::read_to_string(data_dir.join("moves.json"))
+                    .expect("Failed to read moves file");
+                initialize_battle_state(&random_teams, &pokedex, &movedex)
+            })
+            .collect();
+        
+        // Run battles in parallel
+        let results: Vec<_> = states
+            .into_par_iter()
+            .enumerate()
+            .map(|(battle_idx, state)| {
+                let p1_name = format!("Player 1 ({}-{})", battle.player_one, battle_idx);
+                let p2_name = format!("Player 2 ({}-{})", battle.player_two, battle_idx);
+                
+                let player1 = create_player(&battle.player_one, p1_name, p1_time);
+                let player2 = create_player(&battle.player_two, p2_name, p2_time);
+                
+                let env = BattleEnvironment::new(player1, player2, battle.max_turns as usize, false);
+                env.run_battle(state)
+            })
+            .collect();
+        
+        // Aggregate results
+        let mut p1_wins = 0;
+        let mut p2_wins = 0;
+        let mut draws = 0;
+        let mut total_turns = 0;
+        
+        for battle_result in results {
+            total_turns += battle_result.turn_count;
+            match battle_result.winner {
+                Some(SideReference::SideOne) => p1_wins += 1,
+                Some(SideReference::SideTwo) => p2_wins += 1,
+                None => draws += 1,
+            }
+        }
+        
+        let elapsed = start_time.elapsed();
+        
+        println!("\nBattle Results:");
+        println!("===============");
+        println!("{} wins: {} ({:.1}%)", battle.player_one, p1_wins, 
+                 (p1_wins as f64 / battle.runs as f64) * 100.0);
+        println!("{} wins: {} ({:.1}%)", battle.player_two, p2_wins, 
+                 (p2_wins as f64 / battle.runs as f64) * 100.0);
+        println!("Draws: {} ({:.1}%)", draws, 
+                 (draws as f64 / battle.runs as f64) * 100.0);
+        println!("\nAverage turns per battle: {:.1}", 
+                 total_turns as f64 / battle.runs as f64);
+        println!("Total time: {:.2}s", elapsed.as_secs_f64());
+        println!("Time per battle: {:.3}s", elapsed.as_secs_f64() / battle.runs as f64);
     }
 }
