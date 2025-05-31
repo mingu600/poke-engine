@@ -19,6 +19,7 @@ YAGNI (You Aren’t Gonna Need It)
 • Minimise code bloat and long-term technical debt. 
 
 Never make code changes that affect the design without first discussing the design and getting a confirmation to proceed.
+Never include references to AI or Claude in commit messages.
 
 ## Common Development Commands
 
