@@ -121,7 +121,55 @@ side one: switch mamoswine,115.31,300|switch tyranitar,41.00,123|hiddenpowerfire
 side two: stoneedge,915.55,1723|switch lucario,70.53,159|closecombat,827.19,1562|switch breloom,181.84,373|switch keldeo,141.66,297|stealthrock,413.54,805|quickattack,84.78,187|taunt,123.90,263|xscissor,10745.95,19240|switch conkeldurr,153.71,320|switch toxicroak,26.94,71
 ```
 
-5. **Calculate Damage**
+5. **Battle Simulation**
+```shell
+poke-engine battle -p <player1-type> -q <player2-type> [options]
+```
+Run automated battles between different AI players. Supports various player types and parallel execution for performance testing.
+
+**Player Types:**
+- `random` - Chooses moves randomly
+- `firstmove` - Always selects the first available move  
+- `damage` - Maximizes damage output
+- `mcts` - Uses Monte Carlo Tree Search
+
+**Basic Examples:**
+```shell
+# Single battle: MCTS vs Random player
+poke-engine battle -p mcts -q random
+
+# Multiple battles with parallel execution
+poke-engine battle -p mcts -q damage -r 100 -j 8
+
+# Verbose battle with detailed logging
+poke-engine battle -p damage -q mcts -v -l battle.log
+
+# Custom MCTS search times (asymmetric handicapping)
+poke-engine battle -p mcts -q mcts --p1-mcts-time 1000 --p2-mcts-time 100
+```
+
+**Common Options:**
+- `-r/--runs <number>` - Number of battles to run (default: 1)
+- `-j/--threads <number>` - Parallel threads for multiple battles
+- `-t/--mcts-time <ms>` - MCTS search time in milliseconds
+- `-v/--verbose` - Enable detailed turn-by-turn output
+- `-l/--log-file <file>` - Write verbose output to file
+- `-m/--max-turns <number>` - Maximum turns per battle
+
+**Sample Output:**
+```
+Battle Results:
+===============
+mcts wins: 85 (85.0%)
+damage wins: 12 (12.0%)  
+Draws: 3 (3.0%)
+
+Average turns per battle: 23.4
+Total time: 45.67s
+Time per battle: 0.457s
+```
+
+6. **Calculate Damage**
 ```shell
 poke-engine calculate-damage --state <state-string> -o <s1_move> -t <s2_move>
 ```
@@ -136,7 +184,7 @@ Damage Rolls: 122,123,125,126,128,129,131,132,133,135,136,138,139,141,142,144
 Damage Rolls: 155,157,159,161,162,164,166,168,170,172,173,175,177,179,181,183
 ```
 
-6. **Interactive Mode**: Run the engine and input commands directly
+7. **Interactive Mode**: Run the engine and input commands directly
 
 e.g.
 ```shell
