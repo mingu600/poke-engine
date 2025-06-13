@@ -340,8 +340,10 @@ pub struct Gen2Rules;
 - **Phase 2: Multi-Format Architecture** ✅ **COMPLETED**
   - **Week 7-8: Battle Format System** ✅ **COMPLETED**
   - **Week 9-10: Battle State Overhaul** ✅ **COMPLETED**
-- **Phase 3: Core Battle Mechanics** 🚧 **READY TO START**
-- **Phase 4: Testing & Validation** ⏳ **PENDING**
+- **Phase 3: Move Data Migration** ✅ **COMPLETED**
+  - **Week 11-12: Automated Move Migration System** ✅ **COMPLETED**
+- **Phase 4: Core Battle Mechanics** 🚧 **READY TO START**
+- **Phase 5: Testing & Validation** ⏳ **PENDING**
 
 ### Phase 1: Data Layer Foundation (4-6 weeks) ✅ COMPLETED
 
@@ -408,71 +410,97 @@ pub struct Gen2Rules;
 **Phase 2 Completion Summary:**
 The multi-format battle system foundation is now complete with full support for singles, doubles, and VGC formats. The enhanced battle state architecture supports multiple active Pokemon per side while maintaining backward compatibility with the existing singles engine. All Phase 2 format tests (43 tests) are passing, validating the robustness of the implementation.
 
-### Phase 3: Core Battle Mechanics (8-10 weeks)
+### Phase 3: Move Data Migration (2 weeks) ✅ COMPLETED
 
-#### Week 11-12: Move Targeting Implementation
+#### Week 11-12: Automated Move Migration System ✅ COMPLETED
+- [x] Create automated migration tool (`src/data/move_migration.rs`)
+- [x] Extract engine-specific data from legacy `MOVES` HashMap (428/885 moves)
+- [x] Generate registration code for `MoveFactory` integration
+- [x] Implement comprehensive move categorization system
+- [x] Extract and preserve all move flags from legacy system
+- [x] Create migration verification tests and documentation
+- [x] Build migration binary tool for running analysis
+
+**Phase 3 Deliverables Completed:**
+- **MoveMigrationTool**: Automated extraction of special move properties (drain, recoil, boosts, status effects)
+- **Migration Analysis**: 428 moves with engine-specific data extracted from 885 total moves:
+  - 13 draining moves (Absorb, Drain Punch, Giga Drain, etc.)
+  - 12 recoil moves (Brave Bird, Flare Blitz, Head Smash, etc.)  
+  - 90 stat-boosting moves (Agility, Swords Dance, Calm Mind, etc.)
+  - 93 status moves (Thunder Wave, Will-O-Wisp, Toxic, etc.)
+  - 197 moves with secondary effects (Thunderbolt, Ice Beam, Psychic, etc.)
+- **Generated Code**: Complete registration code for `MoveFactory` integration
+- **Comprehensive Flag System**: All 16 move flags extracted and categorized
+- **Migration Documentation**: Complete guide with examples and best practices
+- **Binary Tool**: `migrate_moves` executable for running migration analysis
+- **Note**: Migration extracted **modern/genx versions** of moves (Gen 9 data)
+
+**Phase 3 Completion Summary:**
+The automated move migration system successfully bridges the gap between the legacy hardcoded move system and the new rustemon-based architecture. This enables a seamless transition where base move data comes from PokeAPI while engine-specific mechanics are preserved. The migration maintains the critical design separation: intrinsic move properties vs. positional battle mechanics.
+
+### Phase 4: Core Battle Mechanics (8-10 weeks)
+
+#### Week 13-14: Move Targeting Implementation  
 - [ ] Integrate rustemon move targets directly into engine
 - [ ] Implement format-specific target resolution (singles vs doubles)
 - [ ] Add target validation and auto-targeting logic
 - [ ] Create targeting resolution engine for rustemon MoveTarget enum
 
-#### Week 13-14: Instruction System Enhancement
+#### Week 15-16: Instruction System Enhancement
 - [ ] Extend instructions to handle multi-target scenarios
 - [ ] Implement format-aware instruction generation
 - [ ] Add support for doubles-specific mechanics
 - [ ] Update instruction serialization
 
-### Phase 3: Core Battle Mechanics (8-10 weeks)
-
-#### Week 15-16: Damage Calculation Updates
+#### Week 17-18: Damage Calculation Updates
 - [ ] Extend damage calc for multi-target scenarios
 - [ ] Implement format-specific damage modifiers  
 - [ ] Add support for doubles-specific interactions
 - [ ] Handle spread move damage reduction
 
-#### Week 17-18: Choice Generation Enhancement
+#### Week 19-20: Choice Generation Enhancement
 - [ ] Update move choice generation for multi-format
 - [ ] Implement format-aware switch mechanics
 - [ ] Add support for doubles switching rules
 - [ ] Create choice validation system
 
-#### Week 19-20: Battle Flow Integration
+#### Week 21-22: Battle Flow Integration
 - [ ] Integrate new systems into battle flow
 - [ ] Implement turn order calculation for doubles
 - [ ] Add format-specific priority resolution
 - [ ] Handle simultaneous move execution
 
-#### Week 21-22: AI/Search Algorithm Updates
+#### Week 23-24: AI/Search Algorithm Updates
 - [ ] Update MCTS for multi-format support
 - [ ] Implement format-aware move choice generation
 - [ ] Optimize search performance for doubles complexity
 - [ ] Add format-specific evaluation functions
 
-### Phase 4: Testing & Validation (4-6 weeks)
+### Phase 5: Testing & Validation (4-6 weeks)
 
-#### Week 23-24: Test Suite Migration & Phase 3 Integration Testing
-- [ ] Create `tests/test_phase3_integration.rs` consolidating all Phase 3 tests
+#### Week 25-26: Test Suite Migration & Phase 4 Integration Testing
+- [ ] Create `tests/test_phase4_integration.rs` consolidating all Phase 4 tests
 - [ ] Port remaining legacy tests to new architecture
 - [ ] Maintain test coverage and intent consistency  
 - [ ] Add comprehensive multi-format test scenarios
-- [ ] Validate Phase 2 integration tests continue passing with Phase 3 changes
+- [ ] Validate Phase 2 integration tests continue passing with Phase 4 changes
 
-#### Week 25-26: Battle Environment Enhancement & Complete System Testing
+#### Week 27-28: Battle Environment Enhancement & Complete System Testing
 - [ ] Update battle CLI for format selection
 - [ ] Add format-specific battle initialization
 - [ ] Implement format validation in battle setup
 - [ ] Create format-specific AI players
-- [ ] Create `tests/test_phase4_integration.rs` for complete system validation
+- [ ] Create `tests/test_phase5_integration.rs` for complete system validation
 
-#### Week 27-28: Performance & Optimization
+#### Week 29-30: Performance & Optimization
 - [ ] Profile multi-format performance impact using phase integration tests
 - [ ] Optimize critical paths for doubles/VGC scenarios
 - [ ] Ensure all phase integration tests continue passing after optimizations
 - [ ] Create performance benchmarks integrated with phase testing
 
-**Phase 4 Deliverables**:
+**Phase 5 Deliverables**:
 - Complete test suite migration with phase integration testing
-- `test_phase3_integration.rs` and `test_phase4_integration.rs` 
+- `test_phase4_integration.rs` and `test_phase5_integration.rs` 
 - Performance-optimized multi-format engine
 - Comprehensive validation that all phases work together correctly
 
@@ -624,5 +652,47 @@ Each completed phase now has a consolidated integration test file that validates
    - Mitigation: Version 2.0 release, clear migration documentation
 
 ---
+
+## Future Work Backlog
+
+### 🔮 Generation Support System
+**Priority**: Medium | **Complexity**: High | **Dependencies**: Phase 4 completion
+
+Currently, the migration system extracted **modern/genx versions** (Gen 9) of all moves. To support historical generation accuracy:
+
+#### Implementation Requirements
+- **Generation-specific move migration**: Run migration tool per generation feature flag
+- **Version-aware MoveFactory**: Multiple factory instances or generation parameter
+- **Data version management**: Handle base power, accuracy, type, and effect changes across generations
+- **Generation detection**: Runtime or compile-time generation selection
+- **Backward compatibility**: Ensure existing Gen 9 functionality remains unchanged
+
+#### Examples of Generation Differences
+- **Tackle**: 35 base power (Gen 1-4) → 40 base power (Gen 5+)
+- **Gust**: Normal type (Gen 1) → Flying type (Gen 2+)  
+- **Blizzard**: 90% accuracy (Gen 1) → 70% accuracy (Gen 2-5) → 70% accuracy (Gen 6+)
+- **Bite**: Normal type (Gen 1) → Dark type (Gen 2+)
+
+#### Migration Strategy
+```bash
+# Extract generation-specific moves
+cargo build --features gen1 --no-default-features --bin migrate_moves
+cargo build --features gen3 --no-default-features --bin migrate_moves
+cargo build --features gen9 --no-default-features --bin migrate_moves
+```
+
+### 🚀 Performance Optimization Pipeline
+**Dependencies**: Phase 5 completion
+
+#### Build-time Data Generation
+- **Static file generation**: Pre-compute move/Pokemon data at build time
+- **Elimination of HTTP requests**: Remove runtime rustemon/PokeAPI calls
+- **Data bundling**: Embed generation-specific data directly in binary
+- **Caching strategy**: Smart invalidation based on rustemon version changes
+
+#### Runtime Optimizations  
+- **Move lookup caching**: In-memory HashMap for frequently accessed moves
+- **Instruction pre-computation**: Cache common instruction patterns
+- **State diffing**: Optimize state updates for large battle states
 
 *This document serves as the architectural blueprint for the multi-format Pokemon battle engine overhaul. It should be updated as implementation progresses and requirements evolve.*

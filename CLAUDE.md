@@ -11,13 +11,7 @@ Our objectives are twofold.
 
 Rustemon and PokeAPI source code is available to read in the parent folder. Refer to me as Mingu.
 
-Before working, you must build to clear errors:
-```bash
-# Focus exclusively on gen9 for now
-cargo build --release --features gen9,terastallization --no-default-features
-```
-
-### 🎯 CURRENT STATUS: Phase 2 Week 9-10 Complete - Ready for Week 11-12
+### 🎯 CURRENT STATUS: Phase 3 Week 11-12 Complete - Ready for Phase 4
 
 **Phase 1: Data Layer Foundation** ✅ COMPLETED
 - ✅ Rustemon dependency integration (v4.2.0 with async support)
@@ -45,6 +39,17 @@ cargo build --release --features gen9,terastallization --no-default-features
 - ✅ Position-based targeting system integration
 - ✅ Format-aware state construction and management
 - ✅ Backward compatibility maintained for existing engine
+
+**Phase 3: Move Data Migration** ✅ COMPLETED
+
+**Week 11-12: Automated Move Migration System** ✅ COMPLETED
+- ✅ Move migration tool (`src/data/move_migration.rs`) 
+- ✅ Automated extraction of 428 special moves from 885 total moves
+- ✅ Generation of registration code for `MoveFactory` integration
+- ✅ Complete move categorization (drain, recoil, boost, status, secondary effects)
+- ✅ Comprehensive flag extraction system
+- ✅ Migration verification tests and documentation
+- ✅ Binary tool (`migrate_moves`) for running migration analysis
 
 See `docs/HLD_Multi_Format_Engine_Overhaul.md` for complete roadmap. 
 
@@ -81,11 +86,21 @@ Never include references to AI or Claude in commit messages.
 When working on ANY component that might affect completed phases:
 
 1. **Pre-Development Check:**
+    Before working, you must build to clear errors:
+
+    ```bash
+    # Focus exclusively on gen9 for now
+    cargo build --release --features gen9,terastallization --no-default-features
+    ```
+
    ```bash
    # ALWAYS run this before starting work
    cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features
+   cargo test --test test_phase3_targeting --release --features gen9,terastallization --no-default-features
+   cargo test --test test_move_migration --release --features gen9,terastallization --no-default-features
+   cargo test --test test_move_data_migration --release --features gen9,terastallization --no-default-features
    ```
-   - All 45 tests MUST pass before you start
+   - All tests must pass
 
 2. **During Development:**
    - Make incremental changes
@@ -96,8 +111,11 @@ When working on ANY component that might affect completed phases:
    ```bash
    # ALWAYS run this after making changes
    cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features
+   cargo test --test test_phase3_targeting --release --features gen9,terastallization --no-default-features
+   cargo test --test test_move_migration --release --features gen9,terastallization --no-default-features
+   cargo test --test test_move_data_migration --release --features gen9,terastallization --no-default-features
    ```
-   - All 45 tests MUST still pass
+   - All tests must pass
    - If ANY test fails, you MUST discuss why before proceeding
 
 4. **Failure Protocol:**
@@ -114,36 +132,6 @@ When working on ANY component that might affect completed phases:
 # Focus exclusively on gen9 for now
 cargo build --release --features gen9,terastallization --no-default-features
 ```
-
-### Testing
-
-#### Phase Integration Testing
-Before making any changes to Phase 2 components, you MUST run the Phase 2 integration tests to ensure existing functionality is preserved:
-
-```bash
-# Run Phase 2 integration tests (45 tests covering all Phase 2 components)
-cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features
-```
-
-**Critical Testing Protocol:**
-1. **BEFORE making any changes:** Run Phase 2 integration tests and ensure all pass
-2. **AFTER implementing changes:** Re-run Phase 2 integration tests
-3. **IF tests fail:** You MUST discuss why they're failing before proceeding with changes
-4. **NEVER commit code** that breaks existing Phase 2 integration tests without explicit discussion
-
-#### Full Test Suite
-```bash
-# Run all tests (may have errors from incomplete components)
-cargo test --release --features gen9,terastallization --no-default-features
-
-# Run specific test file
-cargo test --test test_rustemon_integration --release --features gen9,terastallization --no-default-features
-```
-
-#### Test File Organization
-- `tests/test_phase2_integration.rs` - **CRITICAL**: Complete Phase 2 validation (45 tests)
-- `tests/test_rustemon_integration.rs` - Data layer validation tests
-- `tests/test_*.rs` - Legacy tests for other components (may have errors from incomplete system)
 
 ## Architecture Overview
 
@@ -266,3 +254,40 @@ The battle environment supports parallel execution for performance testing:
 - Example usage in `examples/battle_test.rs`
 - Performance benchmarks via parallel execution
 - Algorithm comparison through win/loss statistics
+
+## Move Data vs Battle Mechanics (Critical Distinction)
+
+When working with the move system, it's crucial to understand the separation between **move data** and **battle mechanics**:
+
+### Move Data (stored in BattleMoveData/EngineSpecificMoveData)
+- **Basic properties**: base power, accuracy, PP, type, category
+- **Target pattern**: MoveTarget enum value (e.g., `AllOtherPokemon` for Earthquake)
+- **Intrinsic effects**: drain percentage, recoil damage, status chance
+- **Flags**: protect, contact, sound, etc.
+
+### Battle Mechanics (handled in generate_instructions.rs)
+- **Spread move damage reduction**: 0.75x damage when hitting multiple targets
+- **Format-specific targeting**: How `AllOtherPokemon` resolves in singles vs doubles
+- **Immunity checks**: Flying types immune to Earthquake, etc.
+- **Position-based modifiers**: Different damage based on slot positions
+- **Ally damage**: Whether moves like Earthquake hit your partner
+
+### Example: Earthquake
+**Move Data** (from rustemon):
+- `target: MoveTarget::AllOtherPokemon`
+- `base_power: 100`
+- `type: Ground`
+
+**Battle Mechanics** (in instruction generation):
+- In singles: targets the single opponent
+- In doubles: targets both opponents AND your ally
+- Applies 0.75x damage when hitting multiple targets
+- Checks immunities (Flying type, Levitate ability)
+
+### Important: Don't Over-specify Move Data
+Only register engine-specific data for moves that have **intrinsic special properties**:
+- ✅ Absorb: needs `drain: 0.5`
+- ✅ Thunderbolt: needs `secondaries` for paralysis chance
+- ✅ Agility: needs `boost` for speed increase
+- ❌ Earthquake: doesn't need special data (spread mechanics are positional)
+- ❌ Tackle: doesn't need special data (basic attack move)
