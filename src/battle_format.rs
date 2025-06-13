@@ -66,6 +66,11 @@ impl BattleFormat {
             BattleFormat::Custom(_) => None,
         }
     }
+    
+    /// Get the number of active Pokemon per side for this format
+    pub fn active_pokemon_count(&self) -> usize {
+        self.get_rules().active_pokemon
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]

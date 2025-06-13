@@ -1,3 +1,4 @@
+use crate::battle_format::BattleFormat;
 use crate::choices::{Choice, Choices, MoveCategory, MOVES};
 use crate::define_enum_with_from_str;
 use crate::engine::abilities::Abilities;
@@ -9,7 +10,7 @@ use std::collections::HashSet;
 use std::ops::{Index, IndexMut};
 use std::str::FromStr;
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone, Hash)]
 pub enum SideReference {
     SideOne,
     SideTwo,
@@ -20,6 +21,26 @@ impl SideReference {
             SideReference::SideOne => SideReference::SideTwo,
             SideReference::SideTwo => SideReference::SideOne,
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct BattlePosition {
+    pub side: SideReference,
+    pub slot: usize,  // 0 for singles, 0-1 for doubles
+}
+
+impl BattlePosition {
+    pub fn new(side: SideReference, slot: usize) -> Self {
+        Self { side, slot }
+    }
+    
+    pub fn side_one(slot: usize) -> Self {
+        Self { side: SideReference::SideOne, slot }
+    }
+    
+    pub fn side_two(slot: usize) -> Self {
+        Self { side: SideReference::SideTwo, slot }
     }
 }
 
@@ -347,6 +368,57 @@ impl Iterator for PokemonIndexIterator {
 }
 
 #[derive(Debug, Clone)]
+pub struct ActivePokemon {
+    pub position: BattlePosition,
+    pub pokemon_index: PokemonIndex,
+    pub volatile_statuses: HashSet<PokemonVolatileStatus>,
+    pub substitute_health: i16,
+    pub attack_boost: i8,
+    pub defense_boost: i8,
+    pub special_attack_boost: i8,
+    pub special_defense_boost: i8,
+    pub speed_boost: i8,
+    pub accuracy_boost: i8,
+    pub evasion_boost: i8,
+    pub last_used_move: LastUsedMove,
+    pub damage_dealt: DamageDealt,
+    pub baton_passing: bool,
+    pub shed_tailing: bool,
+    pub force_switch: bool,
+    pub force_trapped: bool,
+    pub slow_uturn_move: bool,
+    pub volatile_status_durations: VolatileStatusDurations,
+    pub switch_out_move_second_saved_move: Choices,
+}
+
+impl Default for ActivePokemon {
+    fn default() -> Self {
+        Self {
+            position: BattlePosition::new(SideReference::SideOne, 0),
+            pokemon_index: PokemonIndex::P0,
+            volatile_statuses: HashSet::new(),
+            substitute_health: 0,
+            attack_boost: 0,
+            defense_boost: 0,
+            special_attack_boost: 0,
+            special_defense_boost: 0,
+            speed_boost: 0,
+            accuracy_boost: 0,
+            evasion_boost: 0,
+            last_used_move: LastUsedMove::None,
+            damage_dealt: DamageDealt::default(),
+            baton_passing: false,
+            shed_tailing: false,
+            force_switch: false,
+            force_trapped: false,
+            slow_uturn_move: false,
+            volatile_status_durations: VolatileStatusDurations::default(),
+            switch_out_move_second_saved_move: Choices::NONE,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct SidePokemon {
     pub p0: Pokemon,
     pub p1: Pokemon,
@@ -458,53 +530,15 @@ impl IndexMut<PokemonIndex> for SidePokemon {
     }
 }
 
-impl Default for Side {
-    fn default() -> Side {
-        Side {
-            active_index: PokemonIndex::P0,
-            baton_passing: false,
-            shed_tailing: false,
-            pokemon: SidePokemon {
-                p0: Pokemon {
-                    ..Pokemon::default()
-                },
-                p1: Pokemon {
-                    ..Pokemon::default()
-                },
-                p2: Pokemon {
-                    ..Pokemon::default()
-                },
-                p3: Pokemon {
-                    ..Pokemon::default()
-                },
-                p4: Pokemon {
-                    ..Pokemon::default()
-                },
-                p5: Pokemon {
-                    ..Pokemon::default()
-                },
-            },
-            substitute_health: 0,
-            attack_boost: 0,
-            defense_boost: 0,
-            special_attack_boost: 0,
-            special_defense_boost: 0,
-            speed_boost: 0,
-            accuracy_boost: 0,
-            side_conditions: SideConditions {
-                ..Default::default()
-            },
-            volatile_status_durations: VolatileStatusDurations::default(),
-            volatile_statuses: HashSet::<PokemonVolatileStatus>::new(),
-            wish: (0, 0),
-            future_sight: (0, PokemonIndex::P0),
-            force_switch: false,
-            slow_uturn_move: false,
-            force_trapped: false,
-            last_used_move: LastUsedMove::None,
-            damage_dealt: DamageDealt::default(),
-            switch_out_move_second_saved_move: Choices::NONE,
-            evasion_boost: 0,
+impl Default for SidePokemon {
+    fn default() -> Self {
+        Self {
+            p0: Pokemon::default(),
+            p1: Pokemon::default(),
+            p2: Pokemon::default(),
+            p3: Pokemon::default(),
+            p4: Pokemon::default(),
+            p5: Pokemon::default(),
         }
     }
 }
@@ -1022,17 +1056,15 @@ impl Pokemon {
 
 #[derive(Debug, Clone)]
 pub struct Side {
+    pub active_slots: Vec<Option<ActivePokemon>>,  // Variable size based on format
+    pub reserve: SidePokemon,                       // Non-active team members
+    pub side_conditions: SideConditions,           // Reflect, spikes, etc.
+    pub wish: (i8, i16),                          // Side-wide wish
+    pub future_sight: (i8, PokemonIndex),         // Future sight tracking
+    
+    // Backward compatibility fields that delegate to first active Pokemon
     pub active_index: PokemonIndex,
-    pub baton_passing: bool,
-    pub shed_tailing: bool,
-    pub pokemon: SidePokemon,
-    pub side_conditions: SideConditions,
-    pub volatile_status_durations: VolatileStatusDurations,
-    pub wish: (i8, i16),
-    pub future_sight: (i8, PokemonIndex),
-    pub force_switch: bool,
-    pub force_trapped: bool,
-    pub slow_uturn_move: bool,
+    pub pokemon: SidePokemon,  // Alias for reserve
     pub volatile_statuses: HashSet<PokemonVolatileStatus>,
     pub substitute_health: i16,
     pub attack_boost: i8,
@@ -1044,30 +1076,231 @@ pub struct Side {
     pub evasion_boost: i8,
     pub last_used_move: LastUsedMove,
     pub damage_dealt: DamageDealt,
+    pub baton_passing: bool,
+    pub shed_tailing: bool,
+    pub force_switch: bool,
+    pub force_trapped: bool,
+    pub slow_uturn_move: bool,
+    pub volatile_status_durations: VolatileStatusDurations,
     pub switch_out_move_second_saved_move: Choices,
 }
+
+impl Default for Side {
+    fn default() -> Self {
+        Self::new_singles()
+    }
+}
+
 impl Side {
+    pub fn new(format: &BattleFormat) -> Self {
+        let active_count = format.active_pokemon_count();
+        let reserve = SidePokemon::default();
+        Self {
+            active_slots: vec![None; active_count],
+            reserve: reserve.clone(),
+            side_conditions: SideConditions::default(),
+            wish: (0, 0),
+            future_sight: (0, PokemonIndex::P0),
+            // Backward compatibility fields
+            active_index: PokemonIndex::P0,
+            pokemon: reserve,
+            volatile_statuses: HashSet::new(),
+            substitute_health: 0,
+            attack_boost: 0,
+            defense_boost: 0,
+            special_attack_boost: 0,
+            special_defense_boost: 0,
+            speed_boost: 0,
+            accuracy_boost: 0,
+            evasion_boost: 0,
+            last_used_move: LastUsedMove::None,
+            damage_dealt: DamageDealt::default(),
+            baton_passing: false,
+            shed_tailing: false,
+            force_switch: false,
+            force_trapped: false,
+            slow_uturn_move: false,
+            volatile_status_durations: VolatileStatusDurations::default(),
+            switch_out_move_second_saved_move: Choices::NONE,
+        }
+    }
+    
+    pub fn new_singles() -> Self {
+        let reserve = SidePokemon::default();
+        Self {
+            active_slots: vec![None],
+            reserve: reserve.clone(),
+            side_conditions: SideConditions::default(),
+            wish: (0, 0),
+            future_sight: (0, PokemonIndex::P0),
+            // Backward compatibility fields
+            active_index: PokemonIndex::P0,
+            pokemon: reserve,
+            volatile_statuses: HashSet::new(),
+            substitute_health: 0,
+            attack_boost: 0,
+            defense_boost: 0,
+            special_attack_boost: 0,
+            special_defense_boost: 0,
+            speed_boost: 0,
+            accuracy_boost: 0,
+            evasion_boost: 0,
+            last_used_move: LastUsedMove::None,
+            damage_dealt: DamageDealt::default(),
+            baton_passing: false,
+            shed_tailing: false,
+            force_switch: false,
+            force_trapped: false,
+            slow_uturn_move: false,
+            volatile_status_durations: VolatileStatusDurations::default(),
+            switch_out_move_second_saved_move: Choices::NONE,
+        }
+    }
+    
+    pub fn new_doubles() -> Self {
+        let reserve = SidePokemon::default();
+        Self {
+            active_slots: vec![None, None],
+            reserve: reserve.clone(),
+            side_conditions: SideConditions::default(),
+            wish: (0, 0),
+            future_sight: (0, PokemonIndex::P0),
+            // Backward compatibility fields
+            active_index: PokemonIndex::P0,
+            pokemon: reserve,
+            volatile_statuses: HashSet::new(),
+            substitute_health: 0,
+            attack_boost: 0,
+            defense_boost: 0,
+            special_attack_boost: 0,
+            special_defense_boost: 0,
+            speed_boost: 0,
+            accuracy_boost: 0,
+            evasion_boost: 0,
+            last_used_move: LastUsedMove::None,
+            damage_dealt: DamageDealt::default(),
+            baton_passing: false,
+            shed_tailing: false,
+            force_switch: false,
+            force_trapped: false,
+            slow_uturn_move: false,
+            volatile_status_durations: VolatileStatusDurations::default(),
+            switch_out_move_second_saved_move: Choices::NONE,
+        }
+    }
+    
+    pub fn get_active_pokemon(&self, slot: usize) -> Option<&ActivePokemon> {
+        self.active_slots.get(slot).and_then(|slot| slot.as_ref())
+    }
+    
+    pub fn get_active_pokemon_mut(&mut self, slot: usize) -> Option<&mut ActivePokemon> {
+        self.active_slots.get_mut(slot).and_then(|slot| slot.as_mut())
+    }
+    
+    pub fn switch_in(&mut self, slot: usize, pokemon_index: PokemonIndex, position: BattlePosition) {
+        let mut active = ActivePokemon::default();
+        active.pokemon_index = pokemon_index;
+        active.position = position;
+        
+        if slot < self.active_slots.len() {
+            self.active_slots[slot] = Some(active);
+        }
+    }
+    
+    pub fn switch_out(&mut self, slot: usize) {
+        if slot < self.active_slots.len() {
+            self.active_slots[slot] = None;
+        }
+    }
+    
+    // Backward compatibility methods for singles (slot 0)
+    pub fn get_active(&mut self) -> &mut Pokemon {
+        let active_index = if let Some(Some(active)) = self.active_slots.get(0) {
+            active.pokemon_index
+        } else {
+            self.active_index // Fallback to compatibility field
+        };
+        &mut self.reserve[active_index]
+    }
+    
+    pub fn get_active_immutable(&self) -> &Pokemon {
+        &self.reserve[self.get_active_index()]
+    }
+    
+    pub fn get_active_index(&self) -> PokemonIndex {
+        if let Some(Some(active)) = self.active_slots.get(0) {
+            active.pokemon_index
+        } else {
+            PokemonIndex::P0 // Default fallback
+        }
+    }
+    
+    pub fn set_active_index(&mut self, index: PokemonIndex) {
+        if self.active_slots.is_empty() {
+            self.active_slots.push(None);
+        }
+        
+        match &mut self.active_slots[0] {
+            Some(active) => {
+                active.pokemon_index = index;
+            }
+            None => {
+                let mut active = ActivePokemon::default();
+                active.pokemon_index = index;
+                active.position = BattlePosition::new(SideReference::SideOne, 0);
+                self.active_slots[0] = Some(active);
+            }
+        }
+        
+        // Also update the compatibility field
+        self.active_index = index;
+    }
+    
+    // Delegate methods for the first active Pokemon's properties
+    pub fn get_volatile_statuses(&self) -> &HashSet<PokemonVolatileStatus> {
+        if let Some(Some(active)) = self.active_slots.get(0) {
+            &active.volatile_statuses
+        } else {
+            // Return reference to the compatibility field as fallback
+            &self.volatile_statuses
+        }
+    }
+    
+    pub fn get_volatile_statuses_mut(&mut self) -> &mut HashSet<PokemonVolatileStatus> {
+        if self.active_slots.is_empty() {
+            self.active_slots.push(Some(ActivePokemon::default()));
+        }
+        if self.active_slots[0].is_none() {
+            self.active_slots[0] = Some(ActivePokemon::default());
+        }
+        &mut self.active_slots[0].as_mut().unwrap().volatile_statuses
+    }
+
     fn io_conditional_print(&self) -> String {
         let mut output = String::new();
-        if self.baton_passing {
-            output.push_str("\n  baton_passing: true");
+        
+        // Check each active Pokemon for conditions
+        for (i, active_opt) in self.active_slots.iter().enumerate() {
+            if let Some(active) = active_opt {
+                if active.baton_passing {
+                    output.push_str(&format!("\n  slot {} baton_passing: true", i));
+                }
+                if active.volatile_statuses.contains(&PokemonVolatileStatus::SUBSTITUTE) {
+                    output.push_str(&format!(
+                        "\n  slot {} substitute_health: {}",
+                        i, active.substitute_health
+                    ));
+                }
+            }
         }
+        
         if self.wish.0 != 0 {
             output.push_str(&format!("\n  wish: ({}, {})", self.wish.0, self.wish.1));
         }
         if self.future_sight.0 != 0 {
             output.push_str(&format!(
                 "\n  future_sight: ({}, {:?})",
-                self.future_sight.0, self.pokemon[self.future_sight.1].id
-            ));
-        }
-        if self
-            .volatile_statuses
-            .contains(&PokemonVolatileStatus::SUBSTITUTE)
-        {
-            output.push_str(&format!(
-                "\n  substitute_health: {}",
-                self.substitute_health
+                self.future_sight.0, self.reserve[self.future_sight.1].id
             ));
         }
 
@@ -1160,43 +1393,48 @@ impl Side {
                 vs_hashset.insert(PokemonVolatileStatus::from_str(item).unwrap());
             }
         }
-        Side {
-            pokemon: SidePokemon {
+        {
+            let pokemon = SidePokemon {
                 p0: Pokemon::deserialize(split[0]),
                 p1: Pokemon::deserialize(split[1]),
                 p2: Pokemon::deserialize(split[2]),
                 p3: Pokemon::deserialize(split[3]),
                 p4: Pokemon::deserialize(split[4]),
                 p5: Pokemon::deserialize(split[5]),
-            },
-            active_index: PokemonIndex::deserialize(split[6]),
-            side_conditions: SideConditions::deserialize(split[7]),
-            volatile_statuses: vs_hashset,
-            volatile_status_durations: VolatileStatusDurations::deserialize(split[9]),
-            substitute_health: split[10].parse::<i16>().unwrap(),
-            attack_boost: split[11].parse::<i8>().unwrap(),
-            defense_boost: split[12].parse::<i8>().unwrap(),
-            special_attack_boost: split[13].parse::<i8>().unwrap(),
-            special_defense_boost: split[14].parse::<i8>().unwrap(),
-            speed_boost: split[15].parse::<i8>().unwrap(),
-            accuracy_boost: split[16].parse::<i8>().unwrap(),
-            evasion_boost: split[17].parse::<i8>().unwrap(),
-            wish: (
-                split[18].parse::<i8>().unwrap(),
-                split[19].parse::<i16>().unwrap(),
-            ),
-            future_sight: (
-                split[20].parse::<i8>().unwrap(),
-                PokemonIndex::deserialize(split[21]),
-            ),
-            force_switch: split[22].parse::<bool>().unwrap(),
-            switch_out_move_second_saved_move: Choices::from_str(split[23]).unwrap(),
-            baton_passing: split[24].parse::<bool>().unwrap(),
-            shed_tailing: split[25].parse::<bool>().unwrap(),
-            force_trapped: split[26].parse::<bool>().unwrap(),
-            last_used_move: LastUsedMove::deserialize(split[27]),
-            damage_dealt: DamageDealt::default(),
-            slow_uturn_move: split[28].parse::<bool>().unwrap(),
+            };
+            Side {
+                active_slots: vec![None], // Default to singles for deserialization
+                reserve: pokemon.clone(),
+                pokemon: pokemon,
+                active_index: PokemonIndex::deserialize(split[6]),
+                side_conditions: SideConditions::deserialize(split[7]),
+                volatile_statuses: vs_hashset,
+                volatile_status_durations: VolatileStatusDurations::deserialize(split[9]),
+                substitute_health: split[10].parse::<i16>().unwrap(),
+                attack_boost: split[11].parse::<i8>().unwrap(),
+                defense_boost: split[12].parse::<i8>().unwrap(),
+                special_attack_boost: split[13].parse::<i8>().unwrap(),
+                special_defense_boost: split[14].parse::<i8>().unwrap(),
+                speed_boost: split[15].parse::<i8>().unwrap(),
+                accuracy_boost: split[16].parse::<i8>().unwrap(),
+                evasion_boost: split[17].parse::<i8>().unwrap(),
+                wish: (
+                    split[18].parse::<i8>().unwrap(),
+                    split[19].parse::<i16>().unwrap(),
+                ),
+                future_sight: (
+                    split[20].parse::<i8>().unwrap(),
+                    PokemonIndex::deserialize(split[21]),
+                ),
+                force_switch: split[22].parse::<bool>().unwrap(),
+                switch_out_move_second_saved_move: Choices::from_str(split[23]).unwrap(),
+                baton_passing: split[24].parse::<bool>().unwrap(),
+                shed_tailing: split[25].parse::<bool>().unwrap(),
+                force_trapped: split[26].parse::<bool>().unwrap(),
+                last_used_move: LastUsedMove::deserialize(split[27]),
+                damage_dealt: DamageDealt::default(),
+                slow_uturn_move: split[28].parse::<bool>().unwrap(),
+            }
         }
     }
 }
@@ -1209,12 +1447,6 @@ impl Side {
             }
         }
         count
-    }
-    pub fn get_active(&mut self) -> &mut Pokemon {
-        &mut self.pokemon[self.active_index]
-    }
-    pub fn get_active_immutable(&self) -> &Pokemon {
-        &self.pokemon[self.active_index]
     }
     fn toggle_force_switch(&mut self) {
         self.force_switch = !self.force_switch;
@@ -1281,6 +1513,7 @@ impl Side {
 
 #[derive(Debug, Clone)]
 pub struct State {
+    pub format: BattleFormat,
     pub side_one: Side,
     pub side_two: Side,
     pub weather: StateWeather,
@@ -1293,6 +1526,7 @@ pub struct State {
 impl Default for State {
     fn default() -> State {
         let mut s = State {
+            format: BattleFormat::Singles,
             side_one: Side::default(),
             side_two: Side::default(),
             weather: StateWeather {
@@ -2347,6 +2581,7 @@ impl State {
     pub fn deserialize(serialized: &str) -> State {
         let split: Vec<&str> = serialized.split("/").collect();
         let mut state = State {
+            format: BattleFormat::Singles, // Default to singles for deserialization
             side_one: Side::deserialize(split[0]),
             side_two: Side::deserialize(split[1]),
             weather: StateWeather::deserialize(split[2]),

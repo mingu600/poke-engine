@@ -1,3 +1,4 @@
+use crate::battle_format::BattleFormat;
 use crate::choices::Choices;
 use crate::engine::abilities::Abilities;
 use crate::engine::items::Items;
@@ -321,59 +322,16 @@ pub fn initialize_battle_state(
     };
 
     // Rest of the state initialization remains the same
-    let side_one = Side {
-        active_index: PokemonIndex::P0,
-        baton_passing: false,
-        shed_tailing: false,
-        pokemon: side_one_pokemon,
-        side_conditions: SideConditions::default(),
-        wish: (0, 0),
-        future_sight: (0, PokemonIndex::P0),
-        force_switch: false,
-        force_trapped: false,
-        slow_uturn_move: false,
-        volatile_statuses: HashSet::new(),
-        substitute_health: 0,
-        attack_boost: 0,
-        defense_boost: 0,
-        special_attack_boost: 0,
-        special_defense_boost: 0,
-        speed_boost: 0,
-        accuracy_boost: 0,
-        evasion_boost: 0,
-        last_used_move: LastUsedMove::None,
-        damage_dealt: Default::default(),
-        switch_out_move_second_saved_move: Choices::NONE,
-        volatile_status_durations: VolatileStatusDurations::default(),
-    };
+    let mut side_one = Side::new_singles();
+    side_one.reserve = side_one_pokemon;
+    side_one.pokemon = side_one.reserve.clone();
 
-    let side_two = Side {
-        active_index: PokemonIndex::P0,
-        baton_passing: false,
-        shed_tailing: false,
-        pokemon: side_two_pokemon,
-        side_conditions: SideConditions::default(),
-        wish: (0, 0),
-        future_sight: (0, PokemonIndex::P0),
-        force_switch: false,
-        force_trapped: false,
-        slow_uturn_move: false,
-        volatile_statuses: HashSet::new(),
-        substitute_health: 0,
-        attack_boost: 0,
-        defense_boost: 0,
-        special_attack_boost: 0,
-        special_defense_boost: 0,
-        speed_boost: 0,
-        accuracy_boost: 0,
-        evasion_boost: 0,
-        last_used_move: LastUsedMove::None,
-        damage_dealt: Default::default(),
-        switch_out_move_second_saved_move: Choices::NONE,
-        volatile_status_durations: VolatileStatusDurations::default(),
-    };
+    let mut side_two = Side::new_singles();
+    side_two.reserve = side_two_pokemon;
+    side_two.pokemon = side_two.reserve.clone();
 
     State {
+        format: BattleFormat::Singles,
         side_one,
         side_two,
         weather: StateWeather {
