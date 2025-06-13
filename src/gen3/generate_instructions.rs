@@ -241,8 +241,8 @@ fn generate_instructions_from_increment_side_condition(
 ) {
     let affected_side_ref;
     match side_condition.target {
-        MoveTarget::Opponent => affected_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => affected_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => affected_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => affected_side_ref = *attacking_side_reference,
     }
 
     let max_layers = match side_condition.condition {
@@ -270,8 +270,8 @@ fn generate_instructions_from_duration_side_conditions(
     duration: i8,
 ) {
     let affected_side_ref = match side_condition.target {
-        MoveTarget::Opponent => attacking_side_reference.get_other_side(),
-        MoveTarget::User => *attacking_side_reference,
+        MoveTarget::OPPONENT => attacking_side_reference.get_other_side(),
+        MoveTarget::USER => *attacking_side_reference,
     };
     let affected_side = state.get_side(&affected_side_ref);
     if affected_side.get_side_condition(side_condition.condition) == 0 {
@@ -319,14 +319,14 @@ fn get_instructions_from_volatile_statuses(
 ) {
     let target_side: SideReference;
     match volatile_status.target {
-        MoveTarget::Opponent => target_side = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side = *attacking_side_reference,
     }
 
     if volatile_status.volatile_status == PokemonVolatileStatus::YAWN
         && immune_to_status(
             state,
-            &MoveTarget::Opponent,
+            &MoveTarget::OPPONENT,
             &target_side,
             &PokemonStatus::SLEEP,
         )
@@ -430,7 +430,7 @@ pub fn immune_to_status(
         .volatile_statuses
         .contains(&PokemonVolatileStatus::SUBSTITUTE)
         || target_side.side_conditions.safeguard > 0)
-        && status_target == &MoveTarget::Opponent
+        && status_target == &MoveTarget::OPPONENT
     // substitute/safeguard don't block if the target is yourself (eg. rest)
     {
         true
@@ -448,7 +448,7 @@ pub fn immune_to_status(
             }
             PokemonStatus::SLEEP => {
                 [Abilities::INSOMNIA, Abilities::VITALSPIRIT].contains(&target_pkmn.ability)
-                    || (status_target == &MoveTarget::Opponent
+                    || (status_target == &MoveTarget::OPPONENT
                         && target_side.has_alive_non_rested_sleeping_pkmn())
                 // sleep clause
             }
@@ -474,8 +474,8 @@ fn get_instructions_from_status_effects(
 ) {
     let target_side_ref: SideReference;
     match status.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side_ref = *attacking_side_reference,
     }
 
     if hit_sub || immune_to_status(state, &status.target, &target_side_ref, &status.status) {
@@ -553,8 +553,8 @@ fn get_instructions_from_boosts(
 ) {
     let target_side_ref: SideReference;
     match boosts.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side_ref = *attacking_side_reference,
     }
     let boostable_stats = boosts.boosts.get_as_pokemon_boostable();
     for (pkmn_boostable_stat, boost) in boostable_stats.iter().filter(|(_, b)| b != &0) {
@@ -608,7 +608,7 @@ fn get_instructions_from_secondaries(
     return_instruction_list.push(incoming_instructions);
 
     for secondary in secondaries {
-        if secondary.target == MoveTarget::Opponent && hit_sub {
+        if secondary.target == MoveTarget::OPPONENT && hit_sub {
             continue;
         }
         let secondary_percent_hit = (secondary.chance / 100.0).min(1.0);
@@ -678,10 +678,10 @@ fn get_instructions_from_secondaries(
                     Effect::RemoveItem => {
                         let secondary_target_side_ref: SideReference;
                         match secondary.target {
-                            MoveTarget::Opponent => {
+                            MoveTarget::OPPONENT => {
                                 secondary_target_side_ref = side_reference.get_other_side();
                             }
-                            MoveTarget::User => {
+                            MoveTarget::USER => {
                                 secondary_target_side_ref = *side_reference;
                             }
                         }
@@ -714,8 +714,8 @@ fn get_instructions_from_heal(
 ) {
     let target_side_ref: SideReference;
     match heal.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side_ref = *attacking_side_reference,
     }
 
     let target_pkmn = state.get_side(&target_side_ref).get_active();
@@ -1098,7 +1098,7 @@ fn move_has_no_effect(state: &State, choice: &Choice, attacking_side_ref: &SideR
     let defender = defending_side.get_active_immutable();
 
     if choice.move_type == PokemonType::ELECTRIC
-        && choice.target == MoveTarget::Opponent
+        && choice.target == MoveTarget::OPPONENT
         && defender.has_type(&PokemonType::GROUND)
     {
         return true;
@@ -1177,7 +1177,7 @@ fn before_move(
         {
             choice.remove_all_effects();
             choice.volatile_status = Some(VolatileStatus {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 volatile_status: charge_volatile_status,
             });
         }
@@ -1589,7 +1589,7 @@ pub fn generate_instructions_from_move(
     let (attacker_side, defender_side) = state.get_both_sides(&attacking_side);
     let active = attacker_side.get_active();
     if active.moves[&choice.move_index].pp < 10 {
-        let pp_decrement_amount = if choice.target == MoveTarget::Opponent
+        let pp_decrement_amount = if choice.target == MoveTarget::OPPONENT
             && defender_side.get_active_immutable().ability == Abilities::PRESSURE
         {
             2

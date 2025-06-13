@@ -382,7 +382,7 @@ pub fn ability_modify_attack_being_used(
             if !already_flinches {
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 10.0,
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                     effect: Effect::VolatileStatus(PokemonVolatileStatus::FLINCH),
                 })
             }
@@ -451,7 +451,7 @@ pub fn ability_modify_attack_against(
             if attacker_choice.flags.contact {
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 33.0,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     effect: Effect::Status(PokemonStatus::POISON),
                 })
             }
@@ -460,7 +460,7 @@ pub fn ability_modify_attack_against(
             if attacker_choice.move_type == PokemonType::ELECTRIC {
                 attacker_choice.remove_all_effects();
                 attacker_choice.accuracy = 100.0;
-                attacker_choice.target = MoveTarget::Opponent;
+                attacker_choice.target = MoveTarget::OPPONENT;
                 attacker_choice.boost = Some(Boost {
                     boosts: StatBoosts {
                         attack: 0,
@@ -470,7 +470,7 @@ pub fn ability_modify_attack_against(
                         speed: 0,
                         accuracy: 0,
                     },
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
                 attacker_choice.category = MoveCategory::Status;
             }
@@ -486,17 +486,17 @@ pub fn ability_modify_attack_against(
             if attacker_choice.flags.contact {
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 3.30,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     effect: Effect::Status(PokemonStatus::POISON),
                 });
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 3.30,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     effect: Effect::Status(PokemonStatus::PARALYZE),
                 });
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 3.30,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     effect: Effect::Status(PokemonStatus::SLEEP),
                 });
             }
@@ -505,7 +505,7 @@ pub fn ability_modify_attack_against(
             if attacker_choice.flags.contact {
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 30.0,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     effect: Effect::Status(PokemonStatus::BURN),
                 });
             }
@@ -523,7 +523,7 @@ pub fn ability_modify_attack_against(
         }
         Abilities::LEVITATE => {
             if attacker_choice.move_type == PokemonType::GROUND
-                && attacker_choice.target == MoveTarget::Opponent
+                && attacker_choice.target == MoveTarget::OPPONENT
                 && attacker_choice.move_id != Choices::THOUSANDARROWS
             {
                 attacker_choice.base_power = 0.0;
@@ -533,7 +533,7 @@ pub fn ability_modify_attack_against(
             if attacker_choice.flags.contact {
                 attacker_choice.add_or_create_secondaries(Secondary {
                     chance: 30.0,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     effect: Effect::Status(PokemonStatus::PARALYZE),
                 })
             }
@@ -549,7 +549,7 @@ pub fn ability_modify_attack_against(
             if attacker_choice.move_type == PokemonType::FIRE {
                 attacker_choice.remove_all_effects();
                 attacker_choice.volatile_status = Some(VolatileStatus {
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                     volatile_status: PokemonVolatileStatus::FLASHFIRE,
                 });
             }
@@ -562,7 +562,7 @@ pub fn ability_modify_attack_against(
         Abilities::SHIELDDUST => {
             if let Some(secondaries) = &mut attacker_choice.secondaries {
                 for secondary in secondaries.iter_mut() {
-                    if secondary.target == MoveTarget::Opponent {
+                    if secondary.target == MoveTarget::OPPONENT {
                         secondary.chance = 0.0;
                     }
                 }
@@ -573,7 +573,7 @@ pub fn ability_modify_attack_against(
                 attacker_choice.remove_all_effects();
                 attacker_choice.base_power = 0.0;
                 attacker_choice.heal = Some(Heal {
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                     amount: 0.25,
                 });
                 attacker_choice.category = MoveCategory::Status;
@@ -584,7 +584,7 @@ pub fn ability_modify_attack_against(
                 attacker_choice.remove_all_effects();
                 attacker_choice.base_power = 0.0;
                 attacker_choice.heal = Some(Heal {
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                     amount: 0.25,
                 });
                 attacker_choice.category = MoveCategory::Status;
@@ -618,7 +618,7 @@ pub fn ability_modify_attack_against(
                 attacker_choice.accuracy = 100.0;
                 attacker_choice.base_power = 0.0;
                 attacker_choice.heal = Some(Heal {
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                     amount: 0.25,
                 });
                 attacker_choice.category = MoveCategory::Status;

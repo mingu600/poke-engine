@@ -140,7 +140,7 @@ impl TargetResolver for FormatTargetResolver {
         let mut targets = Vec::new();
         
         match move_target {
-            MoveTarget::User => {
+            MoveTarget::USER => {
                 targets.push(user_position);
             }
             MoveTarget::SelectedPokemon => {

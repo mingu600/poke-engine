@@ -11,7 +11,7 @@ Our objectives are twofold.
 
 Rustemon and PokeAPI source code is available to read in the parent folder. Refer to me as Mingu.
 
-### 🎯 CURRENT STATUS: Phase 3 Complete - Ready for Phase 4
+### 🎯 CURRENT STATUS: Phase 4.1 Complete - Move Targeting Implementation ✅
 
 **Phase 1: Data Layer Foundation** ✅ COMPLETED
 - ✅ Rustemon dependency integration (v4.2.0 with async support)
@@ -53,6 +53,18 @@ Rustemon and PokeAPI source code is available to read in the parent folder. Refe
 - ✅ **Integration of generated move registrations into MoveFactory**
 - ✅ **Fixed migration tool syntax generation for proper Rust code**
 - ✅ **Complete validation of Phase 3 with all tests passing**
+
+**Phase 4: Core Battle Mechanics** 🚧 IN PROGRESS
+
+**Week 13-14: Move Targeting Implementation** ✅ COMPLETED
+- ✅ **FormatAwareMoveChoice System**: Enhanced move choices with target positions and backward compatibility (`src/genx/state.rs`)
+- ✅ **FormatMoveTargetResolver**: Format-aware move target resolution service (`src/genx/format_targeting.rs`)
+- ✅ **AutoTargetingEngine**: Automatic target resolution for moves that don't require user selection
+- ✅ **Format-Aware Instruction Generation**: Bridge between new targeting system and existing battle flow
+- ✅ **Spread Move Support**: 0.75x damage multiplier for multi-target moves in doubles/VGC
+- ✅ **Integration with Phase 2 & 3**: Seamless integration with format system and move data migration
+- ✅ **Comprehensive Test Suite**: 14 new tests in `tests/test_phase4_move_targeting.rs`
+- ✅ **All Integration Tests Passing**: 73/73 tests across Phases 2, 3, and 4.1
 
 See `docs/HLD_Multi_Format_Engine_Overhaul.md` for complete roadmap. 
 

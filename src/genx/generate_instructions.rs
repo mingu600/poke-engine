@@ -11,6 +11,7 @@ use crate::choices::{
     Boost, Choices, Effect, Heal, MoveTarget, MultiHitMove, Secondary, SideCondition, StatBoosts,
     Status, VolatileStatus, MOVES,
 };
+use crate::battle_format::{BattlePosition, FormatTargetResolver, TargetResolver};
 use crate::instruction::DecrementFutureSightInstruction;
 use crate::instruction::ToggleTerastallizedInstruction;
 use crate::instruction::{
@@ -136,6 +137,37 @@ fn set_last_used_move_as_move(
             previous_last_used_move: side.last_used_move,
         }));
     side.last_used_move = LastUsedMove::Move(used_move);
+}
+
+/// Utility function to resolve targets using the new position-based system
+/// Returns the primary side reference for backward compatibility
+/// TODO: Eventually replace all callers to use position-based targeting directly
+fn resolve_target_side_reference(
+    state: &State,
+    move_target: MoveTarget,
+    attacking_side_reference: &SideReference,
+) -> SideReference {
+    // Create a user position for the attacking side (slot 0 for backward compatibility)
+    let user_position = BattlePosition::new(*attacking_side_reference, 0);
+    
+    // Create a target resolver for the current battle format
+    let resolver = FormatTargetResolver::new(state.format.clone());
+    
+    // Resolve targets using the new system
+    let targets = resolver.resolve_targets(user_position, move_target, state);
+    
+    // For backward compatibility, return the side of the first target
+    // If no targets, default to user side
+    if let Some(first_target) = targets.first() {
+        first_target.side
+    } else {
+        // Fallback to old logic for moves that target the user
+        match move_target {
+            MoveTarget::USER => *attacking_side_reference,
+            MoveTarget::OPPONENT => attacking_side_reference.get_other_side(),
+            _ => *attacking_side_reference, // Default to user side
+        }
+    }
 }
 
 fn generate_instructions_from_switch(
@@ -382,7 +414,7 @@ fn generate_instructions_from_switch(
         if side.side_conditions.toxic_spikes > 0 && switched_in_pkmn.is_grounded() {
             if !immune_to_status(
                 &state,
-                &MoveTarget::User,
+                &MoveTarget::USER,
                 &switching_side_ref,
                 &PokemonStatus::POISON,
             ) {
@@ -470,11 +502,11 @@ fn generate_instructions_from_increment_side_condition(
     attacking_side_reference: &SideReference,
     incoming_instructions: &mut StateInstructions,
 ) {
-    let affected_side_ref;
-    match side_condition.target {
-        MoveTarget::Opponent => affected_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => affected_side_ref = *attacking_side_reference,
-    }
+    let affected_side_ref = resolve_target_side_reference(
+        state,
+        side_condition.target,
+        attacking_side_reference,
+    );
 
     let max_layers = match side_condition.condition {
         PokemonSideCondition::Spikes => 3,
@@ -501,10 +533,11 @@ fn generate_instructions_from_duration_side_conditions(
     incoming_instructions: &mut StateInstructions,
     duration: i8,
 ) {
-    let affected_side_ref = match side_condition.target {
-        MoveTarget::Opponent => attacking_side_reference.get_other_side(),
-        MoveTarget::User => *attacking_side_reference,
-    };
+    let affected_side_ref = resolve_target_side_reference(
+        state,
+        side_condition.target,
+        attacking_side_reference,
+    );
     if side_condition.condition == PokemonSideCondition::AuroraVeil
         && !state.weather_is_active(&Weather::HAIL)
         && !state.weather_is_active(&Weather::SNOW)
@@ -568,16 +601,16 @@ fn get_instructions_from_volatile_statuses(
     attacking_side_reference: &SideReference,
     incoming_instructions: &mut StateInstructions,
 ) {
-    let target_side: SideReference;
-    match volatile_status.target {
-        MoveTarget::Opponent => target_side = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side = *attacking_side_reference,
-    }
+    let target_side = resolve_target_side_reference(
+        state,
+        volatile_status.target,
+        attacking_side_reference,
+    );
 
     if volatile_status.volatile_status == PokemonVolatileStatus::YAWN
         && immune_to_status(
             state,
-            &MoveTarget::Opponent,
+            &MoveTarget::OPPONENT,
             &target_side,
             &PokemonStatus::SLEEP,
         )
@@ -693,7 +726,7 @@ pub fn immune_to_status(
         .volatile_statuses
         .contains(&PokemonVolatileStatus::SUBSTITUTE)
         || target_side.side_conditions.safeguard > 0)
-        && status_target == &MoveTarget::Opponent
+        && status_target == &MoveTarget::OPPONENT
     // substitute/safeguard don't block if the target is yourself (eg. rest)
     {
         true
@@ -724,7 +757,7 @@ pub fn immune_to_status(
                         Abilities::VITALSPIRIT,
                     ]
                     .contains(&target_pkmn.ability)
-                    || (status_target == &MoveTarget::Opponent
+                    || (status_target == &MoveTarget::OPPONENT
                         && target_side.has_alive_non_rested_sleeping_pkmn())
                 // sleep clause
             }
@@ -756,11 +789,11 @@ fn get_instructions_from_status_effects(
     incoming_instructions: &mut StateInstructions,
     hit_sub: bool,
 ) {
-    let target_side_ref: SideReference;
-    match status.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
-    }
+    let target_side_ref = resolve_target_side_reference(
+        state,
+        status.target,
+        attacking_side_reference,
+    );
 
     if hit_sub || immune_to_status(state, &status.target, &target_side_ref, &status.status) {
         return;
@@ -838,11 +871,11 @@ fn get_instructions_from_boosts(
     attacking_side_reference: &SideReference,
     incoming_instructions: &mut StateInstructions,
 ) {
-    let target_side_ref: SideReference;
-    match boosts.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
-    }
+    let target_side_ref = resolve_target_side_reference(
+        state,
+        boosts.target,
+        attacking_side_reference,
+    );
     let boostable_stats = boosts.boosts.get_as_pokemon_boostable();
     for (pkmn_boostable_stat, boost) in boostable_stats.iter().filter(|(_, b)| b != &0) {
         let side = state.get_side_immutable(&target_side_ref);
@@ -895,7 +928,7 @@ fn get_instructions_from_secondaries(
     return_instruction_list.push(incoming_instructions);
 
     for secondary in secondaries {
-        if secondary.target == MoveTarget::Opponent && hit_sub {
+        if secondary.target == MoveTarget::OPPONENT && hit_sub {
             continue;
         }
         let secondary_percent_hit = (secondary.chance / 100.0).min(1.0);
@@ -963,15 +996,11 @@ fn get_instructions_from_secondaries(
                         );
                     }
                     Effect::RemoveItem => {
-                        let secondary_target_side_ref: SideReference;
-                        match secondary.target {
-                            MoveTarget::Opponent => {
-                                secondary_target_side_ref = side_reference.get_other_side();
-                            }
-                            MoveTarget::User => {
-                                secondary_target_side_ref = *side_reference;
-                            }
-                        }
+                        let secondary_target_side_ref = resolve_target_side_reference(
+                            state,
+                            secondary.target,
+                            side_reference,
+                        );
                         let target_pkmn = state.get_side(&secondary_target_side_ref).get_active();
                         secondary_hit_instructions
                             .instruction_list
@@ -999,11 +1028,11 @@ fn get_instructions_from_heal(
     attacking_side_reference: &SideReference,
     incoming_instructions: &mut StateInstructions,
 ) {
-    let target_side_ref: SideReference;
-    match heal.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
-    }
+    let target_side_ref = resolve_target_side_reference(
+        state,
+        heal.target,
+        attacking_side_reference,
+    );
 
     let target_pkmn = state.get_side(&target_side_ref).get_active();
 
@@ -1414,14 +1443,14 @@ pub fn move_has_no_effect(
 
     #[cfg(any(feature = "gen6", feature = "gen7", feature = "gen8", feature = "gen9"))]
     if choice.flags.powder
-        && choice.target == MoveTarget::Opponent
+        && choice.target == MoveTarget::OPPONENT
         && defender.has_type(&PokemonType::GRASS)
     {
         return true;
     }
 
     if choice.move_type == PokemonType::ELECTRIC
-        && choice.target == MoveTarget::Opponent
+        && choice.target == MoveTarget::OPPONENT
         && defender.has_type(&PokemonType::GROUND)
     {
         return true;
@@ -1538,7 +1567,7 @@ fn before_move(
         {
             choice.remove_all_effects();
             choice.volatile_status = Some(VolatileStatus {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 volatile_status: charge_volatile_status,
             });
         }
@@ -1573,7 +1602,7 @@ fn before_move(
             && choice.flags.contact
         {
             choice.heal = Some(Heal {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 amount: -0.125,
             })
         } else if defending_side
@@ -1582,7 +1611,7 @@ fn before_move(
             && choice.flags.contact
         {
             choice.status = Some(Status {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 status: PokemonStatus::POISON,
             })
         } else if defending_side
@@ -1591,7 +1620,7 @@ fn before_move(
             && choice.flags.contact
         {
             choice.status = Some(Status {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 status: PokemonStatus::BURN,
             })
         } else if defending_side
@@ -1600,7 +1629,7 @@ fn before_move(
             && choice.flags.contact
         {
             choice.boost = Some(Boost {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 boosts: StatBoosts {
                     attack: 0,
                     defense: 0,
@@ -2111,7 +2140,7 @@ pub fn generate_instructions_from_move(
     let (attacker_side, defender_side) = state.get_both_sides(&attacking_side);
     let active = attacker_side.get_active();
     if active.moves[&choice.move_index].pp < 10 {
-        let pp_decrement_amount = if choice.target == MoveTarget::Opponent
+        let pp_decrement_amount = if choice.target == MoveTarget::OPPONENT
             && defender_side.get_active_immutable().ability == Abilities::PRESSURE
         {
             2
@@ -10099,5 +10128,76 @@ mod tests {
     #[cfg(any(feature = "gen4"))]
     fn test_gen4_100_percent_to_wake_after_4_sleep_turn() {
         assert_eq!(1.0, chance_to_wake_up(4));
+    }
+}
+
+/// Phase 4: Format-aware instruction generation
+/// This function bridges the gap between multi-format architecture and move targeting
+pub fn generate_instructions_from_format_aware_move_pair(
+    state: &mut State,
+    side_one_move: &super::state::FormatAwareMoveChoice,
+    side_two_move: &super::state::FormatAwareMoveChoice,
+    format: &crate::battle_format::BattleFormat,
+    branch_on_damage: bool,
+) -> Vec<StateInstructions> {
+    use super::format_targeting::FormatMoveTargetResolver;
+    
+    // Create format-aware target resolver
+    let _target_resolver = FormatMoveTargetResolver::new(format.clone());
+    
+    // Convert format-aware choices to legacy choices for now
+    // TODO: Fully integrate format-aware targeting throughout the instruction system
+    let legacy_side_one = side_one_move.to_legacy();
+    let legacy_side_two = side_two_move.to_legacy();
+    
+    // For now, use the existing instruction generation but log the targeting info
+    let instructions = generate_instructions_from_move_pair(
+        state,
+        &legacy_side_one,
+        &legacy_side_two,
+        branch_on_damage,
+    );
+    
+    // TODO Phase 4.2: Add format-specific instruction modifications here
+    // - Multi-target damage reduction (0.75x for spread moves)
+    // - Format-specific targeting resolution
+    // - Position-based effects
+    
+    instructions
+}
+
+/// Helper function to detect if a move is a spread move (hits multiple targets)
+pub fn is_spread_move(
+    move_id: crate::choices::Choices,
+    format: &crate::battle_format::BattleFormat,
+) -> bool {
+    use crate::data::types::MoveTarget;
+    use super::format_targeting::FormatMoveTargetResolver;
+    
+    let resolver = FormatMoveTargetResolver::new(format.clone());
+    
+    if let Ok(move_target) = resolver.get_move_target(move_id) {
+        match move_target {
+            MoveTarget::AllOtherPokemon | MoveTarget::AllOpponents | MoveTarget::AllPokemon => {
+                // In doubles/multi, these are spread moves
+                format.get_rules().active_pokemon > 1
+            }
+            _ => false,
+        }
+    } else {
+        false
+    }
+}
+
+/// Calculate spread move damage multiplier for format-aware battles
+pub fn get_spread_damage_multiplier(
+    move_id: crate::choices::Choices,
+    format: &crate::battle_format::BattleFormat,
+    target_count: usize,
+) -> f32 {
+    if is_spread_move(move_id, format) && target_count > 1 {
+        0.75 // Standard spread move damage reduction
+    } else {
+        1.0 // No reduction for single-target or non-spread moves
     }
 }

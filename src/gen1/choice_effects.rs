@@ -59,7 +59,7 @@ pub fn choice_before_move(
     let attacker = attacking_side.get_active();
     if let Some(choice_volatile_status) = &choice.volatile_status {
         if choice_volatile_status.volatile_status == PokemonVolatileStatus::LOCKEDMOVE
-            && choice_volatile_status.target == MoveTarget::User
+            && choice_volatile_status.target == MoveTarget::USER
         {
             let ins =
                 get_choice_move_disable_instructions(attacker, attacking_side_ref, &choice.move_id);

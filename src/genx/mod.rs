@@ -4,6 +4,7 @@ pub mod battle_environment;
 pub mod choice_effects;
 pub mod damage_calc;
 pub mod evaluate;
+pub mod format_targeting;
 pub mod generate_instructions;
 pub mod items;
 pub mod state;

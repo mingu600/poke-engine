@@ -828,7 +828,7 @@ pub fn item_end_of_turn(
             }
         }
         Items::FLAMEORB => {
-            if !immune_to_status(state, &MoveTarget::User, side_ref, &PokemonStatus::BURN) {
+            if !immune_to_status(state, &MoveTarget::USER, side_ref, &PokemonStatus::BURN) {
                 let side = state.get_side(side_ref);
                 let ins = Instruction::ChangeStatus(ChangeStatusInstruction {
                     side_ref: side_ref.clone(),
@@ -853,7 +853,7 @@ pub fn item_end_of_turn(
             }
         }
         Items::TOXICORB => {
-            if !immune_to_status(state, &MoveTarget::User, side_ref, &PokemonStatus::TOXIC) {
+            if !immune_to_status(state, &MoveTarget::USER, side_ref, &PokemonStatus::TOXIC) {
                 let side = state.get_side(side_ref);
                 let ins = Instruction::ChangeStatus(ChangeStatusInstruction {
                     side_ref: side_ref.clone(),
@@ -888,12 +888,12 @@ pub fn item_modify_attack_against(
                         speed: 0,
                         accuracy: 0,
                     }),
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
                 attacking_choice.add_or_create_secondaries(Secondary {
                     chance: 100.0,
                     effect: Effect::RemoveItem,
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
             }
         }
@@ -902,13 +902,13 @@ pub fn item_modify_attack_against(
                 && attacking_choice.move_id != Choices::THOUSANDARROWS
             {
                 attacking_choice.base_power = 0.0;
-            } else if attacking_choice.target == MoveTarget::Opponent
+            } else if attacking_choice.target == MoveTarget::OPPONENT
                 && attacking_choice.category != MoveCategory::Status
             {
                 attacking_choice.add_or_create_secondaries(Secondary {
                     chance: 100.0,
                     effect: Effect::RemoveItem,
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
             }
         }
@@ -932,12 +932,12 @@ pub fn item_modify_attack_against(
                         speed: 0,
                         accuracy: 0,
                     }),
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
                 attacking_choice.add_or_create_secondaries(Secondary {
                     chance: 100.0,
                     effect: Effect::RemoveItem,
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
             }
         }
@@ -949,7 +949,7 @@ pub fn item_modify_attack_against(
                 attacking_choice.add_or_create_secondaries(Secondary {
                     chance: 100.0,
                     effect: Effect::Heal(-0.166),
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                 })
             }
         }
@@ -970,12 +970,12 @@ pub fn item_modify_attack_against(
                         speed: 0,
                         accuracy: 0,
                     }),
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
                 attacking_choice.add_or_create_secondaries(Secondary {
                     chance: 100.0,
                     effect: Effect::RemoveItem,
-                    target: MoveTarget::Opponent,
+                    target: MoveTarget::OPPONENT,
                 });
             }
         }
@@ -1131,7 +1131,7 @@ pub fn item_modify_attack_being_used(
                     attacking_choice.add_or_create_secondaries(Secondary {
                         chance: 100.0,
                         effect: Effect::Heal(-0.1),
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                     });
                 }
 
@@ -1140,7 +1140,7 @@ pub fn item_modify_attack_being_used(
                     attacking_choice.add_or_create_secondaries(Secondary {
                         chance: 100.0,
                         effect: Effect::Heal(-0.1),
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                     });
                 }
             }
@@ -1417,12 +1417,12 @@ pub fn item_modify_attack_being_used(
                         speed: 0,
                         accuracy: 0,
                     }),
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                 });
                 attacking_choice.add_or_create_secondaries(Secondary {
                     chance: 100.0,
                     effect: Effect::RemoveItem,
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                 });
             }
         }

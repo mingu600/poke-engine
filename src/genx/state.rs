@@ -48,6 +48,81 @@ pub enum MoveChoice {
     None,
 }
 
+/// Enhanced move choice with format-aware targeting for Phase 4
+#[derive(Debug, Clone, PartialEq)]
+pub enum FormatAwareMoveChoice {
+    MoveTera {
+        move_index: PokemonMoveIndex,
+        target_positions: Option<Vec<crate::battle_format::BattlePosition>>,
+    },
+    Move {
+        move_index: PokemonMoveIndex,
+        target_positions: Option<Vec<crate::battle_format::BattlePosition>>,
+    },
+    Switch(PokemonIndex),
+    None,
+}
+
+impl FormatAwareMoveChoice {
+    /// Convert from legacy MoveChoice for backward compatibility
+    pub fn from_legacy(choice: MoveChoice) -> Self {
+        match choice {
+            MoveChoice::MoveTera(index) => FormatAwareMoveChoice::MoveTera {
+                move_index: index,
+                target_positions: None, // Will be resolved during execution
+            },
+            MoveChoice::Move(index) => FormatAwareMoveChoice::Move {
+                move_index: index,
+                target_positions: None, // Will be resolved during execution
+            },
+            MoveChoice::Switch(index) => FormatAwareMoveChoice::Switch(index),
+            MoveChoice::None => FormatAwareMoveChoice::None,
+        }
+    }
+    
+    /// Convert to legacy MoveChoice for backward compatibility
+    pub fn to_legacy(&self) -> MoveChoice {
+        match self {
+            FormatAwareMoveChoice::MoveTera { move_index, .. } => MoveChoice::MoveTera(*move_index),
+            FormatAwareMoveChoice::Move { move_index, .. } => MoveChoice::Move(*move_index),
+            FormatAwareMoveChoice::Switch(index) => MoveChoice::Switch(*index),
+            FormatAwareMoveChoice::None => MoveChoice::None,
+        }
+    }
+    
+    /// Get the move index if this is a move choice
+    pub fn get_move_index(&self) -> Option<PokemonMoveIndex> {
+        match self {
+            FormatAwareMoveChoice::MoveTera { move_index, .. } => Some(*move_index),
+            FormatAwareMoveChoice::Move { move_index, .. } => Some(*move_index),
+            _ => None,
+        }
+    }
+    
+    /// Get the target positions if set
+    pub fn get_target_positions(&self) -> Option<&Vec<crate::battle_format::BattlePosition>> {
+        match self {
+            FormatAwareMoveChoice::MoveTera { target_positions, .. } => target_positions.as_ref(),
+            FormatAwareMoveChoice::Move { target_positions, .. } => target_positions.as_ref(),
+            _ => None,
+        }
+    }
+    
+    /// Set the target positions for a move choice
+    pub fn with_targets(mut self, targets: Vec<crate::battle_format::BattlePosition>) -> Self {
+        match &mut self {
+            FormatAwareMoveChoice::MoveTera { target_positions, .. } => {
+                *target_positions = Some(targets);
+            }
+            FormatAwareMoveChoice::Move { target_positions, .. } => {
+                *target_positions = Some(targets);
+            }
+            _ => {} // Switches and None don't have targets
+        }
+        self
+    }
+}
+
 impl MoveChoice {
     pub fn to_string(&self, side: &Side) -> String {
         match self {

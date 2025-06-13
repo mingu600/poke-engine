@@ -342,7 +342,9 @@ pub struct Gen2Rules;
   - **Week 9-10: Battle State Overhaul** ✅ **COMPLETED**
 - **Phase 3: Move Data Migration** ✅ **COMPLETED**
   - **Week 11-12: Automated Move Migration System** ✅ **COMPLETED**
-- **Phase 4: Core Battle Mechanics** 🚧 **READY TO START**
+- **Phase 4: Core Battle Mechanics** 🚧 **IN PROGRESS**
+  - **Week 13-14: Move Targeting Implementation** ✅ **COMPLETED**
+  - **Week 15-16: Instruction System Enhancement** 🚧 **NEXT**
 - **Phase 5: Testing & Validation** ⏳ **PENDING**
 
 ### Phase 1: Data Layer Foundation (4-6 weeks) ✅ COMPLETED
@@ -441,15 +443,42 @@ The multi-format battle system foundation is now complete with full support for 
 **Phase 3 Completion Summary:**
 The automated move migration system successfully bridges the gap between the legacy hardcoded move system and the new rustemon-based architecture. This enables a seamless transition where base move data comes from PokeAPI while engine-specific mechanics are preserved. The migration maintains the critical design separation: intrinsic move properties vs. positional battle mechanics. **All 428 special moves are now properly registered in the MoveFactory with type-safe, maintainable code generation.**
 
-### Phase 4: Core Battle Mechanics (8-10 weeks)
+### Phase 4: Core Battle Mechanics (8-10 weeks) 🚧 **IN PROGRESS**
 
-**Note**: Phase 3 is now fully complete including the integration of generated move registrations into the MoveFactory. What was initially thought to be Phase 4 work was actually the final verification and integration steps of Phase 3.
+**Phase 4.1: Week 13-14 Move Targeting Implementation** ✅ **COMPLETED**
 
-#### Week 13-14: Move Targeting Implementation  
-- [ ] Integrate rustemon move targets directly into engine
-- [ ] Implement format-specific target resolution (singles vs doubles)
-- [ ] Add target validation and auto-targeting logic
-- [ ] Create targeting resolution engine for rustemon MoveTarget enum
+#### Week 13-14: Move Targeting Implementation ✅ **COMPLETED**
+- [x] **Integrate rustemon move targets directly into engine**
+  - Created `FormatAwareMoveChoice` system with target position support
+  - Integrated with existing `MoveTarget` enum from Phase 3 data migration
+  - Established foundation for full rustemon move data integration
+- [x] **Implement format-specific target resolution (singles vs doubles)**
+  - Built `FormatMoveTargetResolver` service for format-aware targeting
+  - Singles vs doubles vs VGC targeting logic implemented
+  - Integration with Phase 2 `FormatTargetResolver` and `BattlePosition` system
+- [x] **Add target validation and auto-targeting logic**
+  - Created `AutoTargetingEngine` for moves that don't require manual selection
+  - Implemented deterministic target selection for `RandomOpponent` moves
+  - Target validation using Phase 2 `TargetResolver` trait
+- [x] **Create targeting resolution engine for rustemon MoveTarget enum**
+  - Default move targeting logic for common move patterns
+  - Spread move detection (Earthquake, Surf, Rock Slide)
+  - Self-targeting moves (Swords Dance, Agility, Rest)
+  - Field moves (Sunny Day, Sandstorm, Rain Dance)
+
+**Phase 4.1 Deliverables Completed:**
+- **FormatAwareMoveChoice System**: Enhanced move choices with target positions and backward compatibility
+- **Format-Aware Target Resolution**: Multi-format targeting that works with singles, doubles, and VGC
+- **Auto-Targeting Engine**: Automatic target resolution for moves that don't require user selection
+- **Format-Aware Instruction Generation**: Bridge between new targeting system and existing battle flow
+- **Spread Move Support**: 0.75x damage multiplier for multi-target moves in doubles/VGC
+- **Comprehensive Test Suite**: 14 new tests in `tests/test_phase4_move_targeting.rs`
+- **Integration Validation**: All 73 integration tests across Phases 2, 3, and 4.1 passing
+
+**Phase 4.1 Architecture Highlights:**
+- **Backward Compatibility**: All existing systems continue to work unchanged
+- **Phase Integration**: Seamless integration with Phase 2 formats and Phase 3 move data
+- **Extensibility**: Ready for full rustemon move data integration and enhanced instruction generation
 
 #### Week 15-16: Instruction System Enhancement
 - [ ] Extend instructions to handle multi-target scenarios
@@ -626,9 +655,10 @@ Each completed phase now has a consolidated integration test file that validates
 4. **Test Coverage**:
    - [x] **Phase 2**: All 45 integration tests pass covering complete multi-format system
    - [x] **Phase 3**: All 14 integration tests pass covering complete move migration system (6+5+3 tests across targeting, migration, and data migration)
-   - [ ] **Phase 4**: Integration tests for core battle mechanics with format support
+   - [x] **Phase 4.1**: All 14 integration tests pass covering move targeting implementation
+   - [ ] **Phase 4**: Complete integration tests for all core battle mechanics with format support
    - [ ] **Phase 5**: Complete system integration tests across all phases  
-   - [ ] All existing test scenarios pass with equivalent behavior
+   - [x] All existing test scenarios pass with equivalent behavior (73/73 total integration tests passing)
    - [ ] New format-specific tests achieve >90% coverage
    - [ ] Performance tests validate optimization targets
 

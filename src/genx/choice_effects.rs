@@ -126,11 +126,11 @@ pub fn modify_choice(
             let attacker = attacking_side.get_active_immutable();
             if attacker.hp > attacker.maxhp / 3 {
                 attacker_choice.heal = Some(Heal {
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     amount: -0.33,
                 });
                 attacker_choice.boost = Some(Boost {
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     boosts: StatBoosts {
                         attack: 1,
                         defense: 1,
@@ -151,11 +151,11 @@ pub fn modify_choice(
             let attacker = attacking_side.get_active_immutable();
             if attacker.hp > attacker.maxhp / 2 {
                 attacker_choice.heal = Some(Heal {
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     amount: -0.5,
                 });
                 attacker_choice.boost = Some(Boost {
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     boosts: StatBoosts {
                         attack: 2,
                         defense: 0,
@@ -174,7 +174,7 @@ pub fn modify_choice(
         Choices::GROWTH => {
             if state.weather_is_active(&Weather::SUN) {
                 attacker_choice.boost = Some(Boost {
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     boosts: StatBoosts {
                         attack: 2,
                         defense: 0,
@@ -216,14 +216,14 @@ pub fn modify_choice(
             match state.weather.weather_type {
                 Weather::SUN => {
                     attacker_choice.heal = Some(Heal {
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                         amount: 0.667,
                     })
                 }
                 Weather::NONE => {}
                 _ => {
                     attacker_choice.heal = Some(Heal {
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                         amount: 0.25,
                     })
                 }
@@ -267,7 +267,7 @@ pub fn modify_choice(
         Choices::SHOREUP => {
             if state.weather_is_active(&Weather::SAND) {
                 attacker_choice.heal = Some(Heal {
-                    target: MoveTarget::User,
+                    target: MoveTarget::USER,
                     amount: 0.667,
                 });
             }
@@ -279,7 +279,7 @@ pub fn modify_choice(
         }
         Choices::STRENGTHSAP => {
             attacker_choice.boost = Some(Boost {
-                target: MoveTarget::Opponent,
+                target: MoveTarget::OPPONENT,
                 boosts: StatBoosts {
                     attack: -1,
                     defense: 0,
@@ -296,12 +296,12 @@ pub fn modify_choice(
 
                 if defending_side.get_active_immutable().ability == Abilities::LIQUIDOOZE {
                     attacker_choice.heal = Some(Heal {
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                         amount: -1.0 * defender_attack as f32 / attacker_maxhp as f32,
                     });
                 } else {
                     attacker_choice.heal = Some(Heal {
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                         amount: defender_attack as f32 / attacker_maxhp as f32,
                     });
                 }
@@ -319,7 +319,7 @@ pub fn modify_choice(
                 if active.tera_type == PokemonType::STELLAR {
                     attacker_choice.add_or_create_secondaries(Secondary {
                         chance: 100.0,
-                        target: MoveTarget::User,
+                        target: MoveTarget::USER,
                         effect: Effect::Boost(StatBoosts {
                             attack: -1,
                             defense: 0,
@@ -925,7 +925,7 @@ pub fn choice_before_move(
     }
     if let Some(choice_volatile_status) = &choice.volatile_status {
         if choice_volatile_status.volatile_status == PokemonVolatileStatus::LOCKEDMOVE
-            && choice_volatile_status.target == MoveTarget::User
+            && choice_volatile_status.target == MoveTarget::USER
         {
             let ins =
                 get_choice_move_disable_instructions(attacker, attacking_side_ref, &choice.move_id);

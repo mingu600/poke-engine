@@ -235,8 +235,8 @@ fn generate_instructions_from_side_conditions(
 ) {
     let affected_side_ref;
     match side_condition.target {
-        MoveTarget::Opponent => affected_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => affected_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => affected_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => affected_side_ref = *attacking_side_reference,
     }
 
     let affected_side = state.get_side(&affected_side_ref);
@@ -260,8 +260,8 @@ fn get_instructions_from_volatile_statuses(
 ) {
     let target_side: SideReference;
     match volatile_status.target {
-        MoveTarget::Opponent => target_side = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side = *attacking_side_reference,
     }
 
     let side = state.get_side(&target_side);
@@ -358,7 +358,7 @@ pub fn immune_to_status(
         .volatile_statuses
         .contains(&PokemonVolatileStatus::SUBSTITUTE)
         || target_side.side_conditions.safeguard > 0)
-        && status_target == &MoveTarget::Opponent
+        && status_target == &MoveTarget::OPPONENT
     // substitute/safeguard don't block if the target is yourself (eg. rest)
     {
         true
@@ -371,7 +371,7 @@ pub fn immune_to_status(
             }
             PokemonStatus::SLEEP => {
                 // sleep clause
-                status_target == &MoveTarget::Opponent
+                status_target == &MoveTarget::OPPONENT
                     && target_side.has_alive_non_rested_sleeping_pkmn()
             }
 
@@ -393,8 +393,8 @@ fn get_instructions_from_status_effects(
 ) {
     let target_side_ref: SideReference;
     match status.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side_ref = *attacking_side_reference,
     }
 
     if hit_sub || immune_to_status(state, &status.target, &target_side_ref, &status.status) {
@@ -472,8 +472,8 @@ fn get_instructions_from_boosts(
 ) {
     let target_side_ref: SideReference;
     match boosts.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side_ref = *attacking_side_reference,
     }
     let boostable_stats = boosts.boosts.get_as_pokemon_boostable();
     for (pkmn_boostable_stat, boost) in boostable_stats.iter().filter(|(_, b)| b != &0) {
@@ -527,7 +527,7 @@ fn get_instructions_from_secondaries(
     return_instruction_list.push(incoming_instructions);
 
     for secondary in secondaries {
-        if secondary.target == MoveTarget::Opponent && hit_sub {
+        if secondary.target == MoveTarget::OPPONENT && hit_sub {
             continue;
         }
         let secondary_percent_hit = (secondary.chance / 100.0).min(1.0);
@@ -597,10 +597,10 @@ fn get_instructions_from_secondaries(
                     Effect::RemoveItem => {
                         let secondary_target_side_ref: SideReference;
                         match secondary.target {
-                            MoveTarget::Opponent => {
+                            MoveTarget::OPPONENT => {
                                 secondary_target_side_ref = side_reference.get_other_side();
                             }
-                            MoveTarget::User => {
+                            MoveTarget::USER => {
                                 secondary_target_side_ref = *side_reference;
                             }
                         }
@@ -633,8 +633,8 @@ fn get_instructions_from_heal(
 ) {
     let target_side_ref: SideReference;
     match heal.target {
-        MoveTarget::Opponent => target_side_ref = attacking_side_reference.get_other_side(),
-        MoveTarget::User => target_side_ref = *attacking_side_reference,
+        MoveTarget::OPPONENT => target_side_ref = attacking_side_reference.get_other_side(),
+        MoveTarget::USER => target_side_ref = *attacking_side_reference,
     }
 
     let target_pkmn = state.get_side(&target_side_ref).get_active();
@@ -991,7 +991,7 @@ fn move_has_no_effect(state: &State, choice: &Choice, attacking_side_ref: &SideR
     let (_attacking_side, defending_side) = state.get_both_sides_immutable(attacking_side_ref);
     let defender = defending_side.get_active_immutable();
     if choice.move_type == PokemonType::ELECTRIC
-        && choice.target == MoveTarget::Opponent
+        && choice.target == MoveTarget::OPPONENT
         && defender.has_type(&PokemonType::GROUND)
     {
         return true;
@@ -1047,7 +1047,7 @@ pub fn before_move(
         {
             choice.remove_all_effects();
             choice.volatile_status = Some(VolatileStatus {
-                target: MoveTarget::User,
+                target: MoveTarget::USER,
                 volatile_status: charge_volatile_status,
             });
         }
