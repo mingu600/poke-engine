@@ -75,6 +75,38 @@ Never include references to AI or Claude in commit messages.
 
     Ask clarifying questions whenever my request is ambiguous or unclear
 
+## Development Workflow Protocol
+
+### Phase Integration Testing Workflow 🚨 CRITICAL
+When working on ANY component that might affect completed phases:
+
+1. **Pre-Development Check:**
+   ```bash
+   # ALWAYS run this before starting work
+   cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features
+   ```
+   - All 45 tests MUST pass before you start
+
+2. **During Development:**
+   - Make incremental changes
+   - Test frequently during development
+   - If unsure about impact, run phase integration tests
+
+3. **Post-Development Validation:**
+   ```bash
+   # ALWAYS run this after making changes
+   cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features
+   ```
+   - All 45 tests MUST still pass
+   - If ANY test fails, you MUST discuss why before proceeding
+
+4. **Failure Protocol:**
+   - **STOP immediately** if phase integration tests fail
+   - **Analyze** which specific test(s) are failing and why
+   - **Discuss** the failure with Mingu before making any "fixes"
+   - **Document** why the failure occurred and how it was resolved
+   - **Never** comment out or skip failing tests without explicit approval
+
 ## Common Development Commands
 
 ### Building
@@ -82,6 +114,36 @@ Never include references to AI or Claude in commit messages.
 # Focus exclusively on gen9 for now
 cargo build --release --features gen9,terastallization --no-default-features
 ```
+
+### Testing
+
+#### Phase Integration Testing
+Before making any changes to Phase 2 components, you MUST run the Phase 2 integration tests to ensure existing functionality is preserved:
+
+```bash
+# Run Phase 2 integration tests (45 tests covering all Phase 2 components)
+cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features
+```
+
+**Critical Testing Protocol:**
+1. **BEFORE making any changes:** Run Phase 2 integration tests and ensure all pass
+2. **AFTER implementing changes:** Re-run Phase 2 integration tests
+3. **IF tests fail:** You MUST discuss why they're failing before proceeding with changes
+4. **NEVER commit code** that breaks existing Phase 2 integration tests without explicit discussion
+
+#### Full Test Suite
+```bash
+# Run all tests (may have errors from incomplete components)
+cargo test --release --features gen9,terastallization --no-default-features
+
+# Run specific test file
+cargo test --test test_rustemon_integration --release --features gen9,terastallization --no-default-features
+```
+
+#### Test File Organization
+- `tests/test_phase2_integration.rs` - **CRITICAL**: Complete Phase 2 validation (45 tests)
+- `tests/test_rustemon_integration.rs` - Data layer validation tests
+- `tests/test_*.rs` - Legacy tests for other components (may have errors from incomplete system)
 
 ## Architecture Overview
 

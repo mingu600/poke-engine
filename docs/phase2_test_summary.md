@@ -25,26 +25,6 @@ Comprehensive test suite for the Phase 2 multi-format battle system implementati
 - `test_format_validator_evasion_clause` - Evasion move clause enforcement
 - `test_format_validator_valid_team` - Valid team acceptance
 
-### Format Configuration Tests (`tests/test_format_config.rs`)
-✅ **11 tests passed**
-
-#### Configuration System Tests
-- `test_format_config_defaults` - Default configuration creation
-- `test_singles_ou_config` - Singles OU format configuration
-- `test_doubles_ou_config` - Doubles OU format configuration  
-- `test_vgc_2024_reg_g_config` - VGC 2024 Regulation G configuration
-
-#### Factory Pattern Tests
-- `test_battle_format_factory` - Format factory methods
-- `test_from_config_name` - String-based format creation
-
-#### Config-Based Validation Tests
-- `test_config_based_validator_banned_pokemon` - Banned Pokemon enforcement
-- `test_config_based_validator_banned_moves` - Banned move enforcement
-- `test_config_based_validator_restricted_pokemon` - Restricted Pokemon limits
-- `test_config_based_validator_valid_vgc_team` - Valid VGC team acceptance
-- `test_config_based_validator_mythical_ban` - Mythical Pokemon bans
-
 ### Format Enforcement Tests (`tests/test_format_enforcement.rs`)
 ✅ **10 tests passed**
 

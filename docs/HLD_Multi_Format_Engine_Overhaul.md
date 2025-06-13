@@ -135,6 +135,7 @@ pub enum BattleFormat {
     Singles,
     Doubles,
     VGC,
+    Named(String),      // Named format from the format registry
     Custom(BattleRules)
 }
 
@@ -159,28 +160,74 @@ pub enum FormatClause {
 ```
 
 #### Enhanced Battle State
+
+**Implementation Note**: Our implementation maintains existing struct names (`State`, `Side`) and includes backward compatibility fields to ensure the existing singles engine continues to work without modification. This incremental approach allows for gradual migration while preserving engine accuracy.
+
 ```rust
-pub struct BattleState {
-    pub format: BattleFormat,
-    pub sides: [BattleSide; 2],
-    pub field: BattleField,
-    pub turn_context: TurnContext,
-    pub history: BattleHistory,
+// Current implementation maintains existing field names for compatibility
+pub struct State {
+    pub format: BattleFormat,           // NEW: Format awareness
+    pub side_one: Side,                 // Enhanced with multi-format support
+    pub side_two: Side,                 // Enhanced with multi-format support
+    pub weather: StateWeather,          // Existing field
+    pub terrain: StateTerrain,          // Existing field
+    pub trick_room: StateTrickRoom,     // Existing field
+    pub team_preview: bool,             // Existing field
+    pub use_last_used_move: bool,       // Existing field
+    pub use_damage_dealt: bool,         // Existing field
 }
 
-pub struct BattleSide {
-    pub active_slots: Vec<Option<ActivePokemon>>,  // Variable size based on format
-    pub reserve: Vec<ReservePokemon>,               // Non-active team members
-    pub side_conditions: SideConditions,           // Reflect, spikes, etc.
-    pub last_used_moves: Vec<LastUsedMove>,        // Per-slot tracking
+pub struct Side {
+    pub active_slots: Vec<Option<ActivePokemon>>,  // NEW: Variable size based on format
+    pub reserve: SidePokemon,                      // NEW: Non-active team members
+    pub side_conditions: SideConditions,          // Existing field
+    pub wish: (i8, i16),                         // Existing field  
+    pub future_sight: (i8, PokemonIndex),        // Existing field
+    
+    // Backward compatibility fields (delegate to first active Pokemon)
+    pub active_index: PokemonIndex,
+    pub pokemon: SidePokemon,           // Alias for reserve
+    pub volatile_statuses: HashSet<PokemonVolatileStatus>,
+    pub substitute_health: i16,
+    pub attack_boost: i8,
+    pub defense_boost: i8,
+    pub special_attack_boost: i8,
+    pub special_defense_boost: i8,
+    pub speed_boost: i8,
+    pub accuracy_boost: i8,
+    pub evasion_boost: i8,
+    pub last_used_move: LastUsedMove,
+    pub damage_dealt: DamageDealt,
+    pub baton_passing: bool,
+    pub shed_tailing: bool,
+    pub force_switch: bool,
+    pub force_trapped: bool,
+    pub slow_uturn_move: bool,
+    pub volatile_status_durations: VolatileStatusDurations,
+    pub switch_out_move_second_saved_move: Choices,
 }
 
 pub struct ActivePokemon {
     pub position: BattlePosition,
-    pub pokemon: BattlePokemon,
-    pub volatile_status: VolatileStatusSet,
-    pub stat_boosts: StatBoosts,
-    pub locked_move: Option<LockedMove>,
+    pub pokemon_index: PokemonIndex,        // Index into reserve
+    pub volatile_statuses: HashSet<PokemonVolatileStatus>,
+    pub substitute_health: i16,
+    pub attack_boost: i8,
+    pub defense_boost: i8,
+    pub special_attack_boost: i8,
+    pub special_defense_boost: i8,
+    pub speed_boost: i8,
+    pub accuracy_boost: i8,
+    pub evasion_boost: i8,
+    pub last_used_move: LastUsedMove,
+    pub damage_dealt: DamageDealt,
+    pub baton_passing: bool,
+    pub shed_tailing: bool,
+    pub force_switch: bool,
+    pub force_trapped: bool,
+    pub slow_uturn_move: bool,
+    pub volatile_status_durations: VolatileStatusDurations,
+    pub switch_out_move_second_saved_move: Choices,
 }
 ```
 
@@ -223,13 +270,13 @@ pub trait TargetResolver {
         &self,
         user_position: BattlePosition,
         move_target: MoveTarget,
-        battle_state: &BattleState,
+        state: &State,
     ) -> Vec<BattlePosition>;
     
     fn is_valid_target(
         &self,
         target: BattlePosition,
-        battle_state: &BattleState,
+        state: &State,
     ) -> bool;
 }
 ```
@@ -271,7 +318,7 @@ pub struct DamageInstruction {
 ```rust
 pub trait GenerationRules {
     fn supports_format(&self, format: &BattleFormat) -> bool;
-    fn apply_generation_mechanics(&self, state: &mut BattleState);
+    fn apply_generation_mechanics(&self, state: &mut State);
     fn calculate_damage(&self, context: &DamageContext) -> DamageResult;
     fn resolve_move_effects(&self, context: &MoveContext) -> Vec<Instruction>;
 }
@@ -290,10 +337,10 @@ pub struct Gen2Rules;
 
 ### 🎯 Progress Summary
 - **Phase 1: Data Layer Foundation** ✅ **COMPLETED** 
-- **Phase 2: Multi-Format Architecture** 🚧 **IN PROGRESS**
+- **Phase 2: Multi-Format Architecture** ✅ **COMPLETED**
   - **Week 7-8: Battle Format System** ✅ **COMPLETED**
-  - **Week 9-10: Battle State Overhaul** 🚧 **READY TO START**
-- **Phase 3: Core Battle Mechanics** ⏳ **PENDING**
+  - **Week 9-10: Battle State Overhaul** ✅ **COMPLETED**
+- **Phase 3: Core Battle Mechanics** 🚧 **READY TO START**
 - **Phase 4: Testing & Validation** ⏳ **PENDING**
 
 ### Phase 1: Data Layer Foundation (4-6 weeks) ✅ COMPLETED
@@ -329,7 +376,7 @@ pub struct Gen2Rules;
 - Build-time data generation pipeline (`build.rs`) - Can be added later for optimization
 - Static data file generation - Currently using live HTTP requests to rustemon/PokeAPI
 
-### Phase 2: Multi-Format Architecture (6-8 weeks)
+### Phase 2: Multi-Format Architecture (6-8 weeks) ✅ COMPLETED
 
 #### Week 7-8: Battle Format System ✅ COMPLETED
 - [x] Implement `BattleFormat` enum and `BattleRules` struct
@@ -350,11 +397,18 @@ pub struct Gen2Rules;
 - Comprehensive test suite: 43 tests across battle format, config, enforcement, and registry
 - Clean separation: engine handles battle mechanics, external apps handle team validation
 
-#### Week 9-10: Battle State Overhaul
-- [ ] Extend `State` struct for multi-Pokemon battles
-- [ ] Redesign `BattleSide` for variable active Pokemon
-- [ ] Implement new `BattlePosition` and targeting systems  
-- [ ] Update state serialization for new format
+#### Week 9-10: Battle State Overhaul ✅ COMPLETED
+- [x] Extend `State` struct for multi-Pokemon battles
+- [x] Redesign `BattleSide` for variable active Pokemon
+- [x] Implement new `BattlePosition` and targeting systems  
+- [x] Update state serialization for new format
+- [x] Maintain backward compatibility with existing singles engine
+- [x] Add format-aware constructors and initialization
+
+**Phase 2 Completion Summary:**
+The multi-format battle system foundation is now complete with full support for singles, doubles, and VGC formats. The enhanced battle state architecture supports multiple active Pokemon per side while maintaining backward compatibility with the existing singles engine. All Phase 2 format tests (43 tests) are passing, validating the robustness of the implementation.
+
+### Phase 3: Core Battle Mechanics (8-10 weeks)
 
 #### Week 11-12: Move Targeting Implementation
 - [ ] Integrate rustemon move targets directly into engine
@@ -396,23 +450,31 @@ pub struct Gen2Rules;
 
 ### Phase 4: Testing & Validation (4-6 weeks)
 
-#### Week 23-24: Test Suite Migration
-- [ ] Port existing tests to new architecture
-- [ ] Maintain test coverage and intent consistency
+#### Week 23-24: Test Suite Migration & Phase 3 Integration Testing
+- [ ] Create `tests/test_phase3_integration.rs` consolidating all Phase 3 tests
+- [ ] Port remaining legacy tests to new architecture
+- [ ] Maintain test coverage and intent consistency  
 - [ ] Add comprehensive multi-format test scenarios
-- [ ] Create integration tests for all formats
+- [ ] Validate Phase 2 integration tests continue passing with Phase 3 changes
 
-#### Week 25-26: Battle Environment Enhancement  
+#### Week 25-26: Battle Environment Enhancement & Complete System Testing
 - [ ] Update battle CLI for format selection
 - [ ] Add format-specific battle initialization
 - [ ] Implement format validation in battle setup
 - [ ] Create format-specific AI players
+- [ ] Create `tests/test_phase4_integration.rs` for complete system validation
 
 #### Week 27-28: Performance & Optimization
-- [ ] Profile multi-format performance impact
+- [ ] Profile multi-format performance impact using phase integration tests
 - [ ] Optimize critical paths for doubles/VGC scenarios
-- [ ] Implement format-specific performance optimizations
-- [ ] Memory usage optimization for larger state space
+- [ ] Ensure all phase integration tests continue passing after optimizations
+- [ ] Create performance benchmarks integrated with phase testing
+
+**Phase 4 Deliverables**:
+- Complete test suite migration with phase integration testing
+- `test_phase3_integration.rs` and `test_phase4_integration.rs` 
+- Performance-optimized multi-format engine
+- Comprehensive validation that all phases work together correctly
 
 ## Technical Considerations
 
@@ -473,12 +535,32 @@ pub struct Gen2Rules;
 3. **Format Tests**: Format-specific rule validation
 4. **Performance Tests**: Benchmark comparisons
 5. **Data Tests**: Rustemon integration validation
+6. **🆕 Phase Integration Tests**: Consolidated validation of complete phases
+
+**Phase Integration Testing Protocol** 🚨 **CRITICAL**:
+
+Each completed phase now has a consolidated integration test file that validates ALL components working together:
+
+- **Phase 2**: `tests/test_phase2_integration.rs` (45 tests)
+  - Covers: Battle Format System, Format Registry, Format Enforcement, Format Initialization
+  - Command: `cargo test --test test_phase2_integration --release --features gen9,terastallization --no-default-features`
+
+**MANDATORY Testing Workflow**:
+1. **Before ANY changes to completed phases**: Run phase integration tests and ensure ALL pass
+2. **After implementing changes**: Re-run phase integration tests  
+3. **If tests fail**: MUST discuss why they're failing before proceeding with changes
+4. **NEVER commit**: Code that breaks existing phase integration tests without explicit approval
+
+**Future Phase Integration Tests**:
+- **Phase 3**: `tests/test_phase3_integration.rs` (Core Battle Mechanics validation)
+- **Phase 4**: `tests/test_phase4_integration.rs` (Complete system validation)
 
 **Test Migration**:
 - Preserve existing test intent and coverage
 - Create format-specific test suites
 - Add comprehensive multi-format scenarios
 - Maintain benchmark performance tests
+- **🆕 Consolidate tests into phase integration files** for easy validation
 
 ## Success Criteria
 
@@ -500,6 +582,9 @@ pub struct Gen2Rules;
 
 ### Technical Requirements
 4. **Test Coverage**:
+   - [x] **Phase 2**: All 45 integration tests pass covering complete multi-format system
+   - [ ] **Phase 3**: Integration tests for core battle mechanics with format support
+   - [ ] **Phase 4**: Complete system integration tests across all phases  
    - [ ] All existing test scenarios pass with equivalent behavior
    - [ ] New format-specific tests achieve >90% coverage
    - [ ] Performance tests validate optimization targets
