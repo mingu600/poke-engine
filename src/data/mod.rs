@@ -4,3 +4,4 @@ pub mod conversion;
 pub mod move_service;
 pub mod move_factory;
 pub mod move_migration;
+pub mod generated_move_registrations;

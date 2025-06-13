@@ -90,13 +90,16 @@ impl MoveMigrationTool {
         
         writeln!(file, "// Auto-generated move registrations for MoveFactory")?;
         writeln!(file, "// Generated from legacy MOVES HashMap\n")?;
-        writeln!(file, "use crate::choices::Choices;")?;
-        writeln!(file, "use crate::data::types::{{EngineDataBuilder, Flags}};")?;
-        writeln!(file, "use crate::data::move_factory::MoveFactory;\n")?;
+        writeln!(file, "use crate::choices::{{Choices, Flags, Secondary, Effect, Boost, StatBoosts, VolatileStatus, Heal, Status, SideCondition}};")?;
+        writeln!(file, "use crate::data::move_service::EngineDataBuilder;")?;
+        writeln!(file, "use crate::data::types::MoveTarget;")?;
+        writeln!(file, "use crate::state::{{PokemonStatus, PokemonType, PokemonSideCondition}};")?;
+        writeln!(file, "use crate::engine::state::PokemonVolatileStatus;")?;
+        writeln!(file, "use super::move_factory::MoveFactory;\n")?;
         
         writeln!(file, "impl MoveFactory {{")?;
         writeln!(file, "    /// Register all engine-specific move data")?;
-        writeln!(file, "    pub async fn register_all_engine_data(&mut self) {{")?;
+        writeln!(file, "    pub async fn register_all_engine_data(&self) {{")?;
         
         // Group moves by category for better organization
         let mut drain_moves = Vec::new();
@@ -191,22 +194,22 @@ impl MoveMigrationTool {
             writeln!(file, "                .crash({})", crash)?;
         }
         if let Some(ref heal) = engine_data.heal {
-            writeln!(file, "                .heal(Some({:?}))", heal)?;
+            Self::write_heal_field(file, heal)?;
         }
         if let Some(ref boost) = engine_data.boost {
-            writeln!(file, "                .boost(Some({:?}))", boost)?;
+            Self::write_boost_field(file, boost)?;
         }
         if let Some(ref secondaries) = engine_data.secondaries {
-            writeln!(file, "                .secondaries(Some(vec!{:?}))", secondaries)?;
+            Self::write_secondaries_field(file, secondaries)?;
         }
         if let Some(ref status) = engine_data.status {
-            writeln!(file, "                .status(Some({:?}))", status)?;
+            Self::write_status_field(file, status)?;
         }
         if let Some(ref volatile_status) = engine_data.volatile_status {
-            writeln!(file, "                .volatile_status(Some({:?}))", volatile_status)?;
+            Self::write_volatile_status_field(file, volatile_status)?;
         }
         if let Some(ref side_condition) = engine_data.side_condition {
-            writeln!(file, "                .side_condition(Some({:?}))", side_condition)?;
+            Self::write_side_condition_field(file, side_condition)?;
         }
         
         // Write flags if any are set
@@ -240,6 +243,89 @@ impl MoveMigrationTool {
         writeln!(file, "        ).await;")?;
         
         Ok(())
+    }
+    
+    fn write_heal_field(file: &mut File, heal: &crate::choices::Heal) -> std::io::Result<()> {
+        writeln!(file, "                .heal(Heal {{")?;
+        writeln!(file, "                    target: MoveTarget::{:?},", heal.target)?;
+        writeln!(file, "                    amount: {},", if heal.amount.fract() == 0.0 { format!("{:.1}", heal.amount) } else { heal.amount.to_string() })?;
+        writeln!(file, "                }})")
+    }
+    
+    fn write_boost_field(file: &mut File, boost: &crate::choices::Boost) -> std::io::Result<()> {
+        writeln!(file, "                .boost(Boost {{")?;
+        writeln!(file, "                    target: MoveTarget::{:?},", boost.target)?;
+        writeln!(file, "                    boosts: StatBoosts {{")?;
+        writeln!(file, "                        attack: {},", boost.boosts.attack)?;
+        writeln!(file, "                        defense: {},", boost.boosts.defense)?;
+        writeln!(file, "                        special_attack: {},", boost.boosts.special_attack)?;
+        writeln!(file, "                        special_defense: {},", boost.boosts.special_defense)?;
+        writeln!(file, "                        speed: {},", boost.boosts.speed)?;
+        writeln!(file, "                        accuracy: {},", boost.boosts.accuracy)?;
+        writeln!(file, "                    }},")?;
+        writeln!(file, "                }})")
+    }
+    
+    fn write_secondaries_field(file: &mut File, secondaries: &Vec<crate::choices::Secondary>) -> std::io::Result<()> {
+        writeln!(file, "                .secondaries(vec![")?;
+        for secondary in secondaries {
+            writeln!(file, "                    Secondary {{")?;
+            writeln!(file, "                        chance: {},", if secondary.chance.fract() == 0.0 { format!("{:.1}", secondary.chance) } else { secondary.chance.to_string() })?;
+            writeln!(file, "                        target: MoveTarget::{:?},", secondary.target)?;
+            write!(file, "                        effect: ")?;
+            Self::write_effect_field(file, &secondary.effect)?;
+            writeln!(file, ",")?;
+            writeln!(file, "                    }},")?;
+        }
+        writeln!(file, "                ])")
+    }
+    
+    fn write_effect_field(file: &mut File, effect: &crate::choices::Effect) -> std::io::Result<()> {
+        match effect {
+            crate::choices::Effect::Status(status) => {
+                writeln!(file, "Effect::Status(PokemonStatus::{:?})", status)
+            }
+            crate::choices::Effect::VolatileStatus(volatile_status) => {
+                writeln!(file, "Effect::VolatileStatus(PokemonVolatileStatus::{:?})", volatile_status)
+            }
+            crate::choices::Effect::Boost(stat_boosts) => {
+                writeln!(file, "Effect::Boost(StatBoosts {{")?;
+                writeln!(file, "                            attack: {},", stat_boosts.attack)?;
+                writeln!(file, "                            defense: {},", stat_boosts.defense)?;
+                writeln!(file, "                            special_attack: {},", stat_boosts.special_attack)?;
+                writeln!(file, "                            special_defense: {},", stat_boosts.special_defense)?;
+                writeln!(file, "                            speed: {},", stat_boosts.speed)?;
+                writeln!(file, "                            accuracy: {},", stat_boosts.accuracy)?;
+                writeln!(file, "                        }})")
+            }
+            crate::choices::Effect::Heal(heal_amount) => {
+                writeln!(file, "Effect::Heal({})", heal_amount)
+            }
+            crate::choices::Effect::RemoveItem => {
+                writeln!(file, "Effect::RemoveItem")
+            }
+        }
+    }
+    
+    fn write_status_field(file: &mut File, status: &crate::choices::Status) -> std::io::Result<()> {
+        writeln!(file, "                .status(Status {{")?;
+        writeln!(file, "                    target: MoveTarget::{:?},", status.target)?;
+        writeln!(file, "                    status: PokemonStatus::{:?},", status.status)?;
+        writeln!(file, "                }})")
+    }
+    
+    fn write_volatile_status_field(file: &mut File, volatile_status: &crate::choices::VolatileStatus) -> std::io::Result<()> {
+        writeln!(file, "                .volatile_status(VolatileStatus {{")?;
+        writeln!(file, "                    target: MoveTarget::{:?},", volatile_status.target)?;
+        writeln!(file, "                    volatile_status: PokemonVolatileStatus::{:?},", volatile_status.volatile_status)?;
+        writeln!(file, "                }})")
+    }
+    
+    fn write_side_condition_field(file: &mut File, side_condition: &crate::choices::SideCondition) -> std::io::Result<()> {
+        writeln!(file, "                .side_condition(SideCondition {{")?;
+        writeln!(file, "                    target: MoveTarget::{:?},", side_condition.target)?;
+        writeln!(file, "                    condition: PokemonSideCondition::{:?},", side_condition.condition)?;
+        writeln!(file, "                }})")
     }
     
     /// Generate a summary report of the migration
