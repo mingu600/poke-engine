@@ -2,6 +2,45 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🚨 CURRENT PROJECT: Multi-Format Pokemon Battle Engine Overhaul 🚨
+
+### Project Overview
+Our objectives are twofold.
+1. We are implementing a major architectural overhaul to support multiple battle formats (singles, doubles, VGC).
+2. We want to utilize rustemon (Rust wrapper for PokeAPI) as much as possible when referencing data. If it is more efficient to create our own custom structs like the way the current engine works, then it would be nice to base the struct creation on this well-maintained, pokemon data source. This is a critical project as downstream applications depend on this engine's accuracy and reliability.
+
+Rustemon and PokeAPI source code is available to read in the parent folder.
+
+### 🎯 CURRENT STATUS: Phase 2 Week 7-8 Complete - Starting Week 9-10
+
+**Phase 1: Data Layer Foundation** ✅ COMPLETED
+- ✅ Rustemon dependency integration (v4.2.0 with async support)
+- ✅ Data client wrapper (`src/data/rustemon_client.rs`)
+- ✅ Engine data structures (`src/data/types.rs`)
+- ✅ Type conversion utilities (`src/data/conversion.rs`)
+- ✅ Integration testing and validation
+- 🔄 Build-time data generation pipeline (deferred to optimization phase)
+- 🔄 Static data file generation (deferred - currently using live HTTP requests)
+
+**Phase 2: Multi-Format Architecture** 🚧 IN PROGRESS
+
+**Week 7-8: Battle Format System** ✅ COMPLETED
+- ✅ Complete battle format system (`src/battle_format.rs`)
+- ✅ Unified format registry (`src/format_registry.rs`) with 8 predefined formats
+- ✅ Engine-focused clause system (Sleep, OHKO, Evasion, Species, Item, Freeze)
+- ✅ Format enforcement system (`src/format_enforcement.rs`)
+- ✅ Format initialization and detection (`src/format_init.rs`)
+- ✅ Move targeting system supporting all 16 rustemon/PokeAPI targets
+- ✅ Comprehensive test suite (43 tests total)
+
+**Week 9-10: Battle State Overhaul** 🚧 READY TO START
+- Battle state overhaul for multiple active Pokemon per side
+- Enhanced BattleSide for variable active Pokemon counts
+- Position-based targeting system integration
+- State serialization updates for multi-format support
+
+See `docs/HLD_Multi_Format_Engine_Overhaul.md` for complete roadmap. 
+
 ## Working with Python
 
 Whenever working in Python, always run commands in conda env py312. Whenever you need to install a package in Python, always do it in the environment as well.
@@ -20,6 +59,14 @@ YAGNI (You Aren’t Gonna Need It)
 
 Never make code changes that affect the design without first discussing the design and getting a confirmation to proceed.
 Never include references to AI or Claude in commit messages.
+
+ Communication Style:
+
+    Skip affirmations and compliments. No “great question!” or “you’re absolutely right!” - just respond directly
+
+    Challenge flawed ideas openly when you spot issues
+
+    Ask clarifying questions whenever my request is ambiguous or unclear
 
 ## Common Development Commands
 
@@ -51,6 +98,8 @@ Each generation module contains:
 - `state.rs` - Battle state representation
 
 ### Core Components
+
+#### Legacy Components (Existing)
 - `src/state.rs` - Core battle state representation and serialization
 - `src/instruction.rs` - Battle instructions that modify state
 - `src/search.rs` - Search algorithms (expectiminimax, iterative deepening)
@@ -59,7 +108,13 @@ Each generation module contains:
 - `src/pokemon.rs` - Pokémon data structures
 - `src/io.rs` - CLI interface and subcommands
 - `src/genx/battle_environment.rs` - Battle environment for testing algorithms
-- `data/` - Data folder containing important moves, pokedex, and random_team data information.
+- `data/` - Data folder containing important moves, pokedex, and random_team data information
+
+#### New Data Layer (Phase 1 Complete)
+- `src/data/rustemon_client.rs` - Rustemon/PokeAPI HTTP client wrapper
+- `src/data/types.rs` - Engine-optimized data structures that compose rustemon data
+- `src/data/conversion.rs` - Type conversion utilities between rustemon and engine types
+- `tests/test_rustemon_integration.rs` - Data layer validation tests
 
 ### State Representation
 The battle state is serialized as a string format. State deserialization is documented in `State::deserialize` in `src/state.rs`. This is the source of truth for state string parsing.
@@ -142,25 +197,3 @@ The battle environment supports parallel execution for performance testing:
 - Example usage in `examples/battle_test.rs`
 - Performance benchmarks via parallel execution
 - Algorithm comparison through win/loss statistics
-
-### Important Implementation Details
-
-#### Move Choice Data Population
-When creating Pokemon from packed team data, it's critical to populate the `choice` field in the `Move` struct with data from `MOVES` constant. Without this, `generate_instructions_from_move_pair` returns empty instruction lists, causing battles to stall with no progress.
-
-```rust
-// Correct implementation in create_pokemon():
-let choice = if let Some(move_info) = crate::choices::MOVES.get(&move_choice) {
-    move_info.clone()
-} else {
-    Default::default()
-};
-```
-
-#### State Progress Verification
-The engine tracks battle progress through:
-- `State::battle_is_over()` - Returns 0.0 for ongoing, 1.0/-1.0 for winners
-- HP changes in Pokemon teams
-- Turn count vs maximum turn limit
-- Instruction generation and application success
-

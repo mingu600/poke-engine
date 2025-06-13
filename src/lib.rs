@@ -16,13 +16,23 @@ pub mod engine;
 pub mod engine;
 pub mod selfplay;
 
+pub mod battle_format;
+pub mod format_config;
+pub mod format_enforcement;
+pub mod format_init;
+pub mod format_registry;
 pub mod choices;
+// pub mod choices_v2;
+pub mod data;
 pub mod instruction;
+// pub mod instruction_v2;
 pub mod io;
 pub mod mcts;
 pub mod pokemon;
 pub mod search;
 pub mod state;
+// pub mod state_v2;
+// pub mod targeting;
 
 #[macro_export]
 macro_rules! assert_unique_feature {
