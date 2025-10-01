@@ -15,6 +15,7 @@ use crate::state::{
     PokemonSideCondition, PokemonStatus, PokemonType, Side, SideReference, State,
 };
 use core::panic;
+use smallvec::SmallVec;
 use std::collections::HashSet;
 
 fn common_pkmn_stat_calc(stat: u16, ev: u16, level: u16) -> u16 {
@@ -1038,7 +1039,7 @@ impl State {
     pub fn reset_toxic_count(
         &mut self,
         side_ref: &SideReference,
-        vec_to_add_to: &mut Vec<Instruction>,
+        vec_to_add_to: &mut SmallVec<[Instruction; 4]>,
     ) {
         let side = self.get_side(side_ref);
         if side.side_conditions.toxic_count > 0 {
@@ -1056,7 +1057,7 @@ impl State {
     pub fn remove_volatile_statuses_on_switch(
         &mut self,
         side_ref: &SideReference,
-        instructions: &mut Vec<Instruction>,
+        instructions: &mut SmallVec<[Instruction; 4]>,
         baton_passing: bool,
         shed_tailing: bool,
     ) {

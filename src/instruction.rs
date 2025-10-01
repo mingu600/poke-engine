@@ -5,20 +5,23 @@ use crate::state::{
     LastUsedMove, PokemonBoostableStat, PokemonIndex, PokemonMoveIndex, PokemonSideCondition,
     PokemonStatus, PokemonType, SideReference,
 };
+use smallvec::SmallVec;
 use std::fmt;
 use std::fmt::Formatter;
+
+pub type InstructionList = SmallVec<[Instruction; 4]>;
 
 #[derive(PartialEq, Clone)]
 pub struct StateInstructions {
     pub percentage: f32,
-    pub instruction_list: Vec<Instruction>,
+    pub instruction_list: InstructionList,
 }
 
 impl Default for StateInstructions {
     fn default() -> StateInstructions {
         StateInstructions {
             percentage: 100.0,
-            instruction_list: Vec::with_capacity(4),
+            instruction_list: SmallVec::new(),
         }
     }
 }
@@ -36,6 +39,14 @@ impl fmt::Debug for StateInstructions {
 impl StateInstructions {
     pub fn update_percentage(&mut self, modifier: f32) {
         self.percentage *= modifier;
+    }
+
+    #[inline]
+    pub fn clone_with_percentage(&self, percentage: f32) -> Self {
+        StateInstructions {
+            percentage,
+            instruction_list: self.instruction_list.clone(),
+        }
     }
 }
 

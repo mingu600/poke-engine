@@ -51,6 +51,24 @@ pub const BASE_CRIT_CHANCE: f32 = 1.0 / 16.0;
 #[cfg(any(feature = "gen7", feature = "gen8", feature = "gen9"))]
 pub const BASE_CRIT_CHANCE: f32 = 1.0 / 24.0;
 
+#[cfg(feature = "remove_low_chance_instructions")]
+pub const LOW_CHANCE_THRESHOLD: f32 = 0.01; // Prune branches with <1% probability
+
+/// Helper function to conditionally add a branch based on probability threshold
+#[inline]
+fn push_if_above_threshold(vec: &mut Vec<StateInstructions>, instructions: StateInstructions) {
+    #[cfg(feature = "remove_low_chance_instructions")]
+    {
+        if instructions.percentage >= LOW_CHANCE_THRESHOLD {
+            vec.push(instructions);
+        }
+    }
+    #[cfg(not(feature = "remove_low_chance_instructions"))]
+    {
+        vec.push(instructions);
+    }
+}
+
 #[cfg(any(feature = "gen3", feature = "gen4"))]
 pub const MAX_SLEEP_TURNS: i8 = 4;
 
@@ -985,8 +1003,19 @@ fn get_instructions_from_secondaries(
             if secondary_percent_hit < 1.0 {
                 let mut secondary_miss_instructions = secondary_hit_instructions.clone();
                 secondary_miss_instructions.update_percentage(1.0 - secondary_percent_hit);
-                return_instruction_list.insert(i, secondary_miss_instructions);
-                i += 1;
+
+                #[cfg(feature = "remove_low_chance_instructions")]
+                {
+                    if secondary_miss_instructions.percentage >= LOW_CHANCE_THRESHOLD {
+                        return_instruction_list.insert(i, secondary_miss_instructions);
+                        i += 1;
+                    }
+                }
+                #[cfg(not(feature = "remove_low_chance_instructions"))]
+                {
+                    return_instruction_list.insert(i, secondary_miss_instructions);
+                    i += 1;
+                }
             }
 
             if secondary_percent_hit > 0.0 {
@@ -1169,7 +1198,7 @@ fn check_move_hit_or_miss(
                 }));
         }
 
-        frozen_instructions.push(move_missed_instruction);
+        push_if_above_threshold(frozen_instructions, move_missed_instruction);
     }
     incoming_instructions.update_percentage(percent_hit);
 }
@@ -1183,7 +1212,7 @@ fn get_instructions_from_drag(
     let defending_side = state.get_side(&attacking_side_reference.get_other_side());
     if defending_side.get_active_immutable().hp == 0 {
         state.reverse_instructions(&incoming_instructions.instruction_list);
-        frozen_instructions.push(incoming_instructions);
+        push_if_above_threshold(frozen_instructions, incoming_instructions);
         return;
     }
 
@@ -1193,7 +1222,7 @@ fn get_instructions_from_drag(
 
     let num_alive_reserve = defending_side_alive_reserve_indices.len();
     if num_alive_reserve == 0 {
-        frozen_instructions.push(incoming_instructions);
+        push_if_above_threshold(frozen_instructions, incoming_instructions);
         return;
     }
 
@@ -1206,7 +1235,7 @@ fn get_instructions_from_drag(
             &mut cloned_instructions,
         );
         cloned_instructions.update_percentage(1.0 / num_alive_reserve as f32);
-        frozen_instructions.push(cloned_instructions);
+        push_if_above_threshold(frozen_instructions, cloned_instructions);
     }
 }
 
@@ -1707,18 +1736,19 @@ fn generate_instructions_from_existing_status_conditions(
     let attacker_active = attacking_side.get_active();
     match attacker_active.status {
         PokemonStatus::PARALYZE => {
-            // Fully-Paralyzed Branch
+            // Fully-Paralyzed Branch (25% chance)
             let mut fully_paralyzed_instruction = incoming_instructions.clone();
             fully_paralyzed_instruction.update_percentage(0.25);
-            final_instructions.push(fully_paralyzed_instruction);
+            push_if_above_threshold(final_instructions, fully_paralyzed_instruction);
 
             // Non-Paralyzed Branch
             incoming_instructions.update_percentage(0.75);
         }
         PokemonStatus::FREEZE => {
+            // Still Frozen Branch (80% chance)
             let mut still_frozen_instruction = incoming_instructions.clone();
             still_frozen_instruction.update_percentage(0.80);
-            final_instructions.push(still_frozen_instruction);
+            push_if_above_threshold(final_instructions, still_frozen_instruction);
 
             incoming_instructions.update_percentage(0.20);
             attacker_active.status = PokemonStatus::NONE;
@@ -1778,7 +1808,7 @@ fn generate_instructions_from_existing_status_conditions(
                                     previous_turns: current_sleep_turns,
                                 }),
                             );
-                            final_instructions.push(still_asleep_instruction);
+                            push_if_above_threshold(final_instructions, still_asleep_instruction);
                             incoming_instructions.update_percentage(0.0);
                         }
                     } else {
@@ -1848,7 +1878,7 @@ fn generate_instructions_from_existing_status_conditions(
                         }
                         do_nothing_instructions.update_percentage(do_nothing_percentage);
                         incoming_instructions.update_percentage(1.0 - do_nothing_percentage);
-                        final_instructions.push(do_nothing_instructions);
+                        push_if_above_threshold(final_instructions, do_nothing_instructions);
                     }
                 }
                 // Pokemon is asleep because of Rest, and will wake up this turn
@@ -1919,7 +1949,7 @@ fn generate_instructions_from_existing_status_conditions(
             .instruction_list
             .push(damage_instruction);
 
-        final_instructions.push(hit_yourself_instruction);
+        push_if_above_threshold(final_instructions, hit_yourself_instruction);
 
         incoming_instructions.update_percentage(1.0 - HIT_SELF_IN_CONFUSION_CHANCE);
     }
@@ -1931,7 +1961,7 @@ fn generate_instructions_from_existing_status_conditions(
                     CONSECUTIVE_PROTECT_CHANCE.powi(attacking_side.side_conditions.protect as i32);
                 let mut protect_fail_instruction = incoming_instructions.clone();
                 protect_fail_instruction.update_percentage(1.0 - protect_success_chance);
-                final_instructions.push(protect_fail_instruction);
+                push_if_above_threshold(final_instructions, protect_fail_instruction);
                 incoming_instructions.update_percentage(protect_success_chance);
             }
         }
@@ -1962,7 +1992,7 @@ pub fn generate_instructions_from_move(
             attacking_side,
             &mut incoming_instructions,
         );
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
@@ -1982,7 +2012,7 @@ pub fn generate_instructions_from_move(
                     },
                 ));
         }
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
@@ -1998,13 +2028,13 @@ pub fn generate_instructions_from_move(
                     volatile_status: PokemonVolatileStatus::TRUANT,
                 },
             ));
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
     // TODO: test first-turn dragontail missing - it should not trigger this early return
     if !choice.first_move && defender_choice.flags.drag {
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
@@ -2142,7 +2172,7 @@ pub fn generate_instructions_from_move(
             .get_side(&attacking_side)
             .switch_out_move_second_saved_move = choice.move_id;
         state.reverse_instructions(&incoming_instructions.instruction_list);
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
@@ -2153,7 +2183,7 @@ pub fn generate_instructions_from_move(
         == 0
     {
         state.reverse_instructions(&incoming_instructions.instruction_list);
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
@@ -2195,7 +2225,7 @@ pub fn generate_instructions_from_move(
 
     if cannot_use_move(state, &choice, &attacking_side) {
         state.reverse_instructions(&incoming_instructions.instruction_list);
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
 
@@ -2256,14 +2286,14 @@ pub fn generate_instructions_from_move(
     } else if attacker.status == PokemonStatus::SLEEP && !choice.sleep_talk_move {
         state.reverse_instructions(&incoming_instructions.instruction_list);
         if incoming_instructions.percentage > 0.0 {
-            final_instructions.push(incoming_instructions);
+            push_if_above_threshold(final_instructions, incoming_instructions);
         }
         return;
     }
 
     if move_has_no_effect(state, &choice, &attacking_side) {
         state.reverse_instructions(&incoming_instructions.instruction_list);
-        final_instructions.push(incoming_instructions);
+        push_if_above_threshold(final_instructions, incoming_instructions);
         return;
     }
     choice_special_effect(state, choice, &attacking_side, &mut incoming_instructions);
@@ -2350,9 +2380,9 @@ pub fn generate_instructions_from_move(
             // the chance of a branch is the chance of the roll killing + the chance of a crit
             let branch_chance = ((1.0 - crit_rate) * (num_kill_rolls as f32 / 16.0)) + crit_rate;
 
-            let mut branch_ins = incoming_instructions.clone();
-            branch_ins.update_percentage(branch_chance);
-            branch_instructions = Some(branch_ins);
+            branch_instructions = Some(incoming_instructions.clone_with_percentage(
+                incoming_instructions.percentage * branch_chance
+            ));
             branch_damage = defender_active.hp;
 
             incoming_instructions.update_percentage(1.0 - branch_chance);
@@ -2369,9 +2399,9 @@ pub fn generate_instructions_from_move(
             } else {
                 BASE_CRIT_CHANCE
             };
-            let mut branch_ins = incoming_instructions.clone();
-            branch_ins.update_percentage(crit_rate);
-            branch_instructions = Some(branch_ins);
+            branch_instructions = Some(incoming_instructions.clone_with_percentage(
+                incoming_instructions.percentage * crit_rate
+            ));
             branch_damage = (max_crit_damage as f32 * 0.925) as i16;
             incoming_instructions.update_percentage(1.0 - crit_rate);
             regular_damage = (max_damage_dealt as f32 * 0.925) as i16;
@@ -3710,7 +3740,7 @@ fn run_move(
         == Items::COVERTCLOAK
     {
         state.reverse_instructions(&instructions.instruction_list);
-        final_instructions.push(instructions);
+        push_if_above_threshold(final_instructions, instructions);
     } else if let Some(secondaries_vec) = &choice.secondaries {
         state.reverse_instructions(&instructions.instruction_list);
         let instructions_vec_after_secondaries = get_instructions_from_secondaries(
@@ -3724,7 +3754,7 @@ fn run_move(
         final_instructions.extend(instructions_vec_after_secondaries);
     } else {
         state.reverse_instructions(&instructions.instruction_list);
-        final_instructions.push(instructions);
+        push_if_above_threshold(final_instructions, instructions);
     }
 }
 
@@ -3847,6 +3877,7 @@ fn mega_evolve(state: &mut State, side_ref: SideReference, instructions: &mut St
     ability_on_switch_in(state, &side_ref, instructions);
 }
 
+#[inline]
 pub fn generate_instructions_from_move_pair(
     state: &mut State,
     side_one_move: &MoveChoice,
@@ -4009,9 +4040,10 @@ pub fn generate_instructions_from_move_pair(
             }
         }
         SideMovesFirst::SpeedTie => {
-            let mut side_one_moves_first_instruction = incoming_instructions.clone();
+            let side_one_moves_first_instruction = incoming_instructions.clone_with_percentage(
+                incoming_instructions.percentage * 0.5
+            );
             incoming_instructions.update_percentage(0.5);
-            side_one_moves_first_instruction.update_percentage(0.5);
 
             // side_one moves first
             handle_both_moves(

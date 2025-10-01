@@ -579,7 +579,7 @@ fn command_loop(mut io_data: IOData) {
                     io_data
                         .state
                         .apply_instructions(&instructions.instruction_list);
-                    io_data.instruction_list.push(instructions.instruction_list);
+                    io_data.instruction_list.push(instructions.instruction_list.to_vec());
                     io_data.last_instructions_generated = Vec::new();
                     println!("Applied instructions at index {}", index)
                 }

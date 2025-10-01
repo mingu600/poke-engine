@@ -5,6 +5,7 @@ use crate::engine::items::Items;
 use crate::engine::state::{PokemonVolatileStatus, Terrain, Weather};
 use crate::instruction::{BoostInstruction, EnableMoveInstruction, Instruction};
 use crate::pokemon::PokemonName;
+use smallvec::SmallVec;
 use std::collections::HashSet;
 use std::ops::{Index, IndexMut};
 use std::str::FromStr;
@@ -1326,7 +1327,7 @@ impl State {
         }
     }
 
-    pub fn reset_boosts(&mut self, side_ref: &SideReference, vec_to_add_to: &mut Vec<Instruction>) {
+    pub fn reset_boosts(&mut self, side_ref: &SideReference, vec_to_add_to: &mut SmallVec<[Instruction; 4]>) {
         let side = self.get_side(side_ref);
 
         if side.attack_boost != 0 {
@@ -1396,7 +1397,7 @@ impl State {
     pub fn re_enable_disabled_moves(
         &mut self,
         side_ref: &SideReference,
-        vec_to_add_to: &mut Vec<Instruction>,
+        vec_to_add_to: &mut SmallVec<[Instruction; 4]>,
     ) {
         let active = self.get_side(side_ref).get_active();
         if active.moves.m0.disabled {
@@ -1714,12 +1715,14 @@ impl State {
         }
     }
 
-    pub fn apply_instructions(&mut self, instructions: &Vec<Instruction>) {
+    #[inline]
+    pub fn apply_instructions(&mut self, instructions: &[Instruction]) {
         for i in instructions {
             self.apply_one_instruction(i)
         }
     }
 
+    #[inline]
     pub fn apply_one_instruction(&mut self, instruction: &Instruction) {
         match instruction {
             Instruction::Damage(instruction) => {
@@ -1901,12 +1904,14 @@ impl State {
         }
     }
 
-    pub fn reverse_instructions(&mut self, instructions: &Vec<Instruction>) {
+    #[inline]
+    pub fn reverse_instructions(&mut self, instructions: &[Instruction]) {
         for i in instructions.iter().rev() {
             self.reverse_one_instruction(i);
         }
     }
 
+    #[inline]
     pub fn reverse_one_instruction(&mut self, instruction: &Instruction) {
         match instruction {
             Instruction::Damage(instruction) => {

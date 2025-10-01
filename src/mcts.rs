@@ -6,7 +6,8 @@ use crate::state::State;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 use rand::thread_rng;
-use std::collections::HashMap;
+use smallvec::SmallVec;
+use std::cell::RefCell;
 use std::time::Duration;
 
 fn sigmoid(x: f32) -> f32 {
@@ -14,11 +15,44 @@ fn sigmoid(x: f32) -> f32 {
     1.0 / (1.0 + (-0.0125 * x).exp())
 }
 
+/// Memory pool for reusing Vec<Node> allocations across MCTS iterations
+struct NodeVectorPool {
+    pool: Vec<Vec<Node>>,
+}
+
+impl NodeVectorPool {
+    fn new() -> Self {
+        NodeVectorPool { pool: Vec::with_capacity(100) }
+    }
+
+    #[inline]
+    fn get(&mut self, capacity: usize) -> Vec<Node> {
+        self.pool.pop().map(|mut v| {
+            v.clear();
+            v.reserve(capacity.saturating_sub(v.capacity()));
+            v
+        }).unwrap_or_else(|| Vec::with_capacity(capacity))
+    }
+
+    fn clear(&mut self) {
+        self.pool.clear();
+    }
+}
+
+thread_local! {
+    static NODE_VECTOR_POOL: RefCell<NodeVectorPool> = RefCell::new(NodeVectorPool::new());
+}
+
+#[inline]
+fn get_pooled_vec(capacity: usize) -> Vec<Node> {
+    NODE_VECTOR_POOL.with(|pool| pool.borrow_mut().get(capacity))
+}
+
 #[derive(Debug)]
 pub struct Node {
     pub root: bool,
     pub parent: *mut Node,
-    pub children: HashMap<(usize, usize), Vec<Node>>,
+    pub children: Vec<((usize, usize), Vec<Node>)>,
     pub times_visited: u32,
 
     // represents the instructions & s1/s2 moves that led to this node from the parent
@@ -39,7 +73,7 @@ impl Node {
             parent: std::ptr::null_mut(),
             instructions: StateInstructions::default(),
             times_visited: 0,
-            children: HashMap::new(),
+            children: Vec::new(),
             s1_choice: 0,
             s2_choice: 0,
             s1_options: None,
@@ -71,8 +105,9 @@ impl Node {
     pub fn maximize_ucb_for_side(&self, side_map: &[MoveNode]) -> usize {
         let mut choice = 0;
         let mut best_ucb1 = f32::MIN;
+        let parent_visits_ln = (self.times_visited as f32).ln();
         for (index, node) in side_map.iter().enumerate() {
-            let this_ucb1 = node.ucb1(self.times_visited);
+            let this_ucb1 = node.ucb1(parent_visits_ln);
             if this_ucb1 > best_ucb1 {
                 best_ucb1 = this_ucb1;
                 choice = index;
@@ -81,7 +116,11 @@ impl Node {
         choice
     }
 
-    pub unsafe fn selection(&mut self, state: &mut State) -> (*mut Node, usize, usize) {
+    pub unsafe fn selection(
+        &mut self,
+        state: &mut State,
+        rng: &mut ThreadRng,
+    ) -> (*mut Node, usize, usize) {
         let return_node = self as *mut Node;
         if self.s1_options.is_none() {
             let (s1_options, s2_options) = state.get_all_options();
@@ -90,26 +129,28 @@ impl Node {
 
         let s1_mc_index = self.maximize_ucb_for_side(&self.s1_options.as_ref().unwrap());
         let s2_mc_index = self.maximize_ucb_for_side(&self.s2_options.as_ref().unwrap());
-        let child_vector = self.children.get_mut(&(s1_mc_index, s2_mc_index));
-        match child_vector {
-            Some(child_vector) => {
+        let key = (s1_mc_index, s2_mc_index);
+
+        // Linear search through children
+        let child_entry = self.children.iter_mut().find(|(k, _)| *k == key);
+        match child_entry {
+            Some((_, child_vector)) => {
                 let child_vec_ptr = child_vector as *mut Vec<Node>;
-                let chosen_child = self.sample_node(child_vec_ptr);
+                let chosen_child = self.sample_node(child_vec_ptr, rng);
                 state.apply_instructions(&(*chosen_child).instructions.instruction_list);
-                (*chosen_child).selection(state)
+                (*chosen_child).selection(state, rng)
             }
             None => (return_node, s1_mc_index, s2_mc_index),
         }
     }
 
-    unsafe fn sample_node(&self, move_vector: *mut Vec<Node>) -> *mut Node {
-        let mut rng = thread_rng();
-        let weights: Vec<f64> = (*move_vector)
+    unsafe fn sample_node(&self, move_vector: *mut Vec<Node>, rng: &mut ThreadRng) -> *mut Node {
+        let weights: SmallVec<[f64; 4]> = (*move_vector)
             .iter()
             .map(|x| x.instructions.percentage as f64)
             .collect();
-        let dist = WeightedIndex::new(weights).unwrap();
-        let chosen_node = &mut (&mut *move_vector)[dist.sample(&mut rng)];
+        let dist = WeightedIndex::new(&weights[..]).unwrap();
+        let chosen_node = &mut (&mut *move_vector)[dist.sample(rng)];
         let chosen_node_ptr = chosen_node as *mut Node;
         chosen_node_ptr
     }
@@ -119,6 +160,7 @@ impl Node {
         state: &mut State,
         s1_move_index: usize,
         s2_move_index: usize,
+        rng: &mut ThreadRng,
     ) -> *mut Node {
         let s1_move = &self.s1_options.as_ref().unwrap()[s1_move_index].move_choice;
         let s2_move = &self.s2_options.as_ref().unwrap()[s2_move_index].move_choice;
@@ -131,7 +173,7 @@ impl Node {
         let should_branch_on_damage = self.root || (*self.parent).root;
         let mut new_instructions =
             generate_instructions_from_move_pair(state, s1_move, s2_move, should_branch_on_damage);
-        let mut this_pair_vec = Vec::with_capacity(new_instructions.len());
+        let mut this_pair_vec = get_pooled_vec(new_instructions.len());
         for state_instructions in new_instructions.drain(..) {
             let mut new_node = Node::new();
             new_node.parent = self;
@@ -144,10 +186,9 @@ impl Node {
 
         // sample a node from the new instruction list.
         // this is the node that the rollout will be done on
-        let new_node_ptr = self.sample_node(&mut this_pair_vec);
+        let new_node_ptr = self.sample_node(&mut this_pair_vec, rng);
         state.apply_instructions(&(*new_node_ptr).instructions.instruction_list);
-        self.children
-            .insert((s1_move_index, s2_move_index), this_pair_vec);
+        self.children.push(((s1_move_index, s2_move_index), this_pair_vec));
         new_node_ptr
     }
 
@@ -194,14 +235,16 @@ pub struct MoveNode {
 }
 
 impl MoveNode {
-    pub fn ucb1(&self, parent_visits: u32) -> f32 {
+    #[inline]
+    pub fn ucb1(&self, parent_visits_ln: f32) -> f32 {
         if self.visits == 0 {
             return f32::INFINITY;
         }
         let score = (self.total_score / self.visits as f32)
-            + (2.0 * (parent_visits as f32).ln() / self.visits as f32).sqrt();
+            + (2.0 * parent_visits_ln / self.visits as f32).sqrt();
         score
     }
+
     pub fn average_score(&self) -> f32 {
         let score = self.total_score / self.visits as f32;
         score
@@ -231,9 +274,9 @@ pub struct MctsResult {
     pub iteration_count: u32,
 }
 
-fn do_mcts(root_node: &mut Node, state: &mut State, root_eval: &f32) {
-    let (mut new_node, s1_move, s2_move) = unsafe { root_node.selection(state) };
-    new_node = unsafe { (*new_node).expand(state, s1_move, s2_move) };
+fn do_mcts(root_node: &mut Node, state: &mut State, root_eval: &f32, rng: &mut ThreadRng) {
+    let (mut new_node, s1_move, s2_move) = unsafe { root_node.selection(state, rng) };
+    new_node = unsafe { (*new_node).expand(state, s1_move, s2_move, rng) };
     let rollout_result = unsafe { (*new_node).rollout(state, root_eval) };
     unsafe { (*new_node).backpropagate(rollout_result, state) }
 }
@@ -251,10 +294,11 @@ pub fn perform_mcts(
     root_node.root = true;
 
     let root_eval = evaluate(state);
+    let mut rng = thread_rng();
     let start_time = std::time::Instant::now();
     while start_time.elapsed() < max_time {
         for _ in 0..1000 {
-            do_mcts(&mut root_node, state, &root_eval);
+            do_mcts(&mut root_node, state, &root_eval, &mut rng);
         }
 
         /*
@@ -299,6 +343,9 @@ pub fn perform_mcts(
             .collect(),
         iteration_count: root_node.times_visited,
     };
+
+    // Clear the pool to prevent memory accumulation across multiple MCTS runs
+    NODE_VECTOR_POOL.with(|pool| pool.borrow_mut().clear());
 
     result
 }

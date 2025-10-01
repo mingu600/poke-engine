@@ -1,4 +1,5 @@
 use super::abilities::Abilities;
+use smallvec::SmallVec;
 use super::choice_effects::charge_volatile_to_choice;
 use crate::choices::{Choices, MoveCategory};
 use crate::define_enum_with_from_str;
@@ -634,7 +635,7 @@ impl State {
     pub fn reset_toxic_count(
         &mut self,
         side_ref: &SideReference,
-        vec_to_add_to: &mut Vec<Instruction>,
+        vec_to_add_to: &mut SmallVec<[Instruction; 4]>,
     ) {
         let side = self.get_side(side_ref);
         if side.side_conditions.toxic_count > 0 {
@@ -652,7 +653,7 @@ impl State {
     pub fn remove_volatile_statuses_on_switch(
         &mut self,
         side_ref: &SideReference,
-        instructions: &mut Vec<Instruction>,
+        instructions: &mut impl Extend<Instruction>,
         baton_passing: bool,
     ) {
         let side = self.get_side(side_ref);

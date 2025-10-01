@@ -1,4 +1,5 @@
 use crate::choices::Choices;
+use smallvec::SmallVec;
 use crate::define_enum_with_from_str;
 use crate::instruction::{
     ChangeSideConditionInstruction, ChangeStatusInstruction, Instruction,
@@ -577,7 +578,7 @@ impl State {
         (side_one_options, side_two_options)
     }
 
-    pub fn reset_toxic(&mut self, side_ref: &SideReference, vec_to_add_to: &mut Vec<Instruction>) {
+    pub fn reset_toxic(&mut self, side_ref: &SideReference, vec_to_add_to: &mut SmallVec<[Instruction; 4]>) {
         let side = self.get_side(side_ref);
         if side.side_conditions.toxic_count > 0 {
             vec_to_add_to.push(Instruction::ChangeSideCondition(
@@ -604,7 +605,7 @@ impl State {
     pub fn remove_volatile_statuses_on_switch(
         &mut self,
         side_ref: &SideReference,
-        vec_to_add_to: &mut Vec<Instruction>,
+        vec_to_add_to: &mut SmallVec<[Instruction; 4]>,
         baton_passing: bool,
     ) {
         let side = self.get_side(side_ref);
